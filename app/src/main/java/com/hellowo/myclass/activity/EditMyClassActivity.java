@@ -1,6 +1,8 @@
 package com.hellowo.myclass.activity;
 
+import android.Manifest;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,15 +10,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityChooseClassBinding;
 import com.hellowo.myclass.databinding.ActivityEditClassBinding;
 import com.hellowo.myclass.model.MyClass;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
 
 public class EditMyClassActivity extends AppCompatActivity {
@@ -33,6 +44,8 @@ public class EditMyClassActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
 
         initMyClass();
+        initClassYearTextButton();
+        initClassImageButton();
         initSaveButton();
     }
 
@@ -47,11 +60,82 @@ public class EditMyClassActivity extends AppCompatActivity {
         }
     }
 
+    private void initClassYearTextButton() {
+        binding.classYearTextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showClassYearPicker();
+            }
+        });
+    }
+
+    private void showClassYearPicker() {
+        final Calendar calendar = Calendar.getInstance();
+        if(myClass.classYear > 0){
+            calendar.set(Calendar.YEAR, myClass.classYear);
+        }
+
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        myClass.classYear = year;
+                        binding.classYearTextButton.setText(String.valueOf(myClass.classYear));
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+        dpd.showYearPickerFirst(true);
+        dpd.setAccentColor(getResources().getColor(R.color.highlight));
+        dpd.show(getFragmentManager(), "Datepickerdialog");
+    }
+
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            showPhotoPicker();
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {}
+    };
+
+    private void showPhotoPicker() {
+        TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(EditMyClassActivity.this)
+                .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
+                    @Override
+                    public void onImageSelected(Uri uri) {
+                        myClass.classImageUri = uri.getPath();
+                        Glide.with(EditMyClassActivity.this)
+                                .load(new File(uri.getPath()))
+                                .into(binding.classImageButton);
+                    }
+                }).create();
+        bottomSheetDialogFragment.show(getSupportFragmentManager());
+    }
+
+    private void initClassImageButton() {
+        binding.classImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new TedPermission(EditMyClassActivity.this)
+                        .setPermissionListener(permissionlistener)
+                        .setRationaleMessage(getString(R.string.ask_storage_permission))
+                        .setDeniedMessage(getString(R.string.denied_storage_permission))
+                        .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .check();
+            }
+        });
+    }
+
     private void initSaveButton() {
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveMyClassData();
+                finish();
             }
         });
     }
@@ -63,7 +147,10 @@ public class EditMyClassActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(myClass.id)){
                     myClass.id = UUID.randomUUID().toString();
                 }
-                myClass.schoolName = binding.schoolNameEditText.getText().toString();
+                myClass.classYear = Integer.valueOf(binding.classYearTextButton.getText().toString());
+                myClass.schoolName = binding.schoolNameEditText.getText().toString().trim();
+                myClass.grade = binding.gradeEditText.getText().toString().trim();
+                myClass.classNumber = binding.classNumberEditText.getText().toString().trim();
                 myClass.lastUpdated = System.currentTimeMillis();
                 realm.copyToRealmOrUpdate(myClass);
             }

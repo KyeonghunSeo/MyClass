@@ -2,8 +2,11 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/main_text</item>
+        <item name="android:colorPrimaryDark">@color/main_background_dark</item>
+        <item name="android:colorAccent">@color/highlight</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/main_background</item>
     </style>
     
 </resources>

@@ -4,4 +4,6 @@
     <string name="edit_class">새 학급 만들기</string>
     <string name="add_class">EditClassActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="ask_storage_permission">사진을 가져오려면 권한을 설정하셔야 합니다.</string>
+    <string name="denied_storage_permission">권한을 거부하셨습니다\\n다시 설정하시려면 설정 페이지로 가주세요.</string>
 </resources>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <data>
-        <variable name="activity" type="com.hellowo.myclass.activity.EditMyClassActivity"/>
-    </data>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/main_background">
 
         <FrameLayout
             android:id="@+id/topBarLayout"
@@ -28,18 +27,90 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/topBarLayout"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/classImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="25dp"
+                app:civ_border_color="@color/cardview_shadow_start_color"
+                app:civ_border_width="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2017"
+                android:id="@+id/classYearTextButton"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                style="@style/Base.TextAppearance.AppCompat.Subhead" />
 
             <EditText
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:text="Name"
                 android:ems="10"
-                android:id="@+id/schoolNameEditText" />
+                android:id="@+id/schoolNameEditText"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical|center" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="120dp">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="16dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="numberSigned"
+                        android:ems="10"
+                        android:id="@+id/gradeEditText"
+                        android:gravity="center"
+                        style="@style/Base.TextAppearance.AppCompat.Display3"
+                        android:text="1" />
+
+                    <TextView
+                        android:text="Grade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Base.TextAppearance.AppCompat.Caption" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="16dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="numberSigned"
+                        android:ems="10"
+                        android:id="@+id/classNumberEditText"
+                        android:gravity="center"
+                        style="@style/Base.TextAppearance.AppCompat.Display3"
+                        android:text="1" />
+
+                    <TextView
+                        android:text="ClassNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Base.TextAppearance.AppCompat.Caption" />
+                </FrameLayout>
+            </LinearLayout>
 
             <Button
                 android:text="Button"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blank">
@@ -14,7 +14,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_margin="50dp"
-            app:cardCornerRadius="8dp"
+            app:cardCornerRadius="0dp"
             app:cardElevation="15dp">
 
             <LinearLayout
@@ -26,7 +26,7 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.75">
+                    android:layout_weight="1">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/classImage"
@@ -34,7 +34,7 @@
                         android:layout_height="match_parent"
                         android:layout_margin="25dp"
                         app:civ_border_color="@color/cardview_shadow_start_color"
-                        app:civ_border_width="3dp"
+                        app:civ_border_width="0dp"
                         android:src="@drawable/default_class_img" />
                 </LinearLayout>
 

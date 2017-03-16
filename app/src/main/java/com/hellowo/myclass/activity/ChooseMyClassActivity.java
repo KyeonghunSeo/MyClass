@@ -8,16 +8,19 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.hellowo.myclass.AppScreen;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityChooseClassBinding;
 import com.hellowo.myclass.databinding.ItemClassPagerBinding;
 import com.hellowo.myclass.model.MyClass;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,13 +117,22 @@ public class ChooseMyClassActivity extends AppCompatActivity {
             return v;
         }
 
-        private void setMyClassCardView(ItemClassPagerBinding binding, MyClass myClass) {
+        private void setMyClassCardView(ItemClassPagerBinding binding, final MyClass myClass) {
             binding.classCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Intent intent = new Intent(ChooseMyClassActivity.this, HomeMyClassActivity.class);
+                    intent.putExtra(HomeMyClassActivity.INTENT_KEY_MY_CLASS_ID, myClass.id);
+                    startActivity(intent);
                 }
             });
             binding.schoolNameText.setText(myClass.schoolName);
+
+            if(!TextUtils.isEmpty(myClass.classImageUri)){ // 이미지 경로가 있으면 로드함
+                Glide.with(ChooseMyClassActivity.this)
+                        .load(new File(myClass.classImageUri))
+                        .into(binding.classImage);
+            }
         }
 
         private void setNewMyClassCardView(ItemClassPagerBinding binding) {
