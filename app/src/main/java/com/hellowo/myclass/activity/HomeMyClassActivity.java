@@ -44,6 +44,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
 
         initClassData();
+        initUI();
     }
 
     private void initClassData() {
