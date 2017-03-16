@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyClass</string>
+    <string name="my_classes">.</string>
+    <string name="edit_class">새 학급 만들기</string>
+    <string name="add_class">EditClassActivity</string>
+    <string name="action_settings">Settings</string>
+</resources>
