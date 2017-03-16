@@ -44,5 +44,8 @@ dependencies {
     // 권한 관련 라이브러리
     compile 'gun0912.ted:tedpermission:1.0.2'
 
+    // 파일 관련 라이브러리
+    compile 'com.nononsenseapps:filepicker:4.0.0'
+
     testCompile 'junit:junit:4.12'
 }

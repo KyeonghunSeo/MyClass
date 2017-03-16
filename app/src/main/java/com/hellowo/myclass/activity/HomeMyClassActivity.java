@@ -1,8 +1,12 @@
 package com.hellowo.myclass.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -22,7 +26,9 @@ import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityChooseClassBinding;
 import com.hellowo.myclass.databinding.ActivityHomeClassBinding;
 import com.hellowo.myclass.model.MyClass;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -31,8 +37,11 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+import static android.R.attr.data;
+
 public class HomeMyClassActivity extends AppCompatActivity {
     public final static String INTENT_KEY_MY_CLASS_ID = "INTENT_KEY_MY_CLASS_ID";
+    public final static int FILE_CODE = 8250;
     private ActivityHomeClassBinding binding;
     private Realm realm;
     private MyClass myClass;
@@ -55,6 +64,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
         viewPager.setAdapter(new PagerAdapter() {
             @Override
@@ -191,6 +201,24 @@ public class HomeMyClassActivity extends AppCompatActivity {
                         snackbar.show();
                     }
                 }, 1000);
+
+                // This always works
+                Intent i = new Intent(HomeMyClassActivity.this, FilePickerActivity.class);
+                // This works if you defined the intent filter
+                // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+
+                // Set these depending on your use case. These are the defaults.
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+                i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+                // Configure initial directory by specifying a String.
+                // You could specify a String like "/storage/emulated/0/", but that can
+                // dangerous. Always use Android's API calls to get paths to the SD-card or
+                // internal memory.
+                i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
+                startActivityForResult(i, FILE_CODE);
             }
         });
 
@@ -225,6 +253,33 @@ public class HomeMyClassActivity extends AppCompatActivity {
             public ViewHolder(final View itemView) {
                 super(itemView);
                 txt = (TextView) itemView.findViewById(R.id.txt_vp_item_list);
+            }
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == FILE_CODE && resultCode == Activity.RESULT_OK) {
+            if (!intent.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)) {
+                // The URI will now be something like content://PACKAGE-NAME/root/path/to/file
+                Uri uri = intent.getData();
+                // A utility method is provided to transform the URI to a File object
+                File file = com.nononsenseapps.filepicker.Utils.getFileForUri(uri);
+                // If you want a URI which matches the old return value, you can do
+                Uri fileUri = Uri.fromFile(file);
+                // Do something with the result...
+            } else {
+                // Handling multiple results is one extra step
+                ArrayList<String> paths = intent.getStringArrayListExtra(FilePickerActivity.EXTRA_PATHS);
+                if (paths != null) {
+                    for (String path: paths) {
+                        Uri uri = Uri.parse(path);
+                        // Do something with the URI
+                        File file = com.nononsenseapps.filepicker.Utils.getFileForUri(uri);
+                        // If you want a URI which matches the old return value, you can do
+                        Uri fileUri = Uri.fromFile(file);
+                        // Do something with the result...
+                    }
+                }
             }
         }
     }

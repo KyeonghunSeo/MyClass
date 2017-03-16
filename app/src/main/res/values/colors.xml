@@ -3,6 +3,10 @@
     <color name="blank">#00000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="primary">#A593E0</color>
+    <color name="primary_dark">#A593E0</color>
+    <color name="accent">#A593E0</color>
+
     <color name="highlight">#A593E0</color>
     <color name="main_background_dark">#FFFFFFFF</color>
     <color name="main_background">#FFFFFFFF</color>
