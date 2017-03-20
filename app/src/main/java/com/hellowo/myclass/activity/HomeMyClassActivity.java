@@ -70,6 +70,13 @@ public class HomeMyClassActivity extends AppCompatActivity {
     }
 
     private void initToolBarLayout() {
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startFilePickerActivity();
+            }
+        });
+
         final CollapsingToolbarLayout collapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.toolbar);
         collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#009F90AF"));
@@ -95,23 +102,38 @@ public class HomeMyClassActivity extends AppCompatActivity {
 
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
-                final View view = LayoutInflater.from(
-                        getBaseContext()).inflate(R.layout.item_home_myclass_pager, null, false);
+                View view;
 
-                final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(
-                                getBaseContext(), LinearLayoutManager.VERTICAL, false
-                        )
-                );
-                recyclerView.setAdapter(new StudentListAdapter(
-                        HomeMyClassActivity.this,
-                        studentRealmResults)
-                );
+                switch (position){
+                    case 0:
+                        view = createStudentListView();
+                        break;
+                    default:
+                        view = new View(HomeMyClassActivity.this);
+                        break;
+                }
+
                 container.addView(view);
                 return view;
             }
         });
+    }
+
+    private View createStudentListView() {
+        final View view = LayoutInflater.from(
+                getBaseContext()).inflate(R.layout.item_home_myclass_pager, null, false);
+
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(
+                        getBaseContext(), LinearLayoutManager.VERTICAL, false
+                )
+        );
+        recyclerView.setAdapter(new StudentListAdapter(
+                HomeMyClassActivity.this,
+                studentRealmResults)
+        );
+        return view;
     }
 
     private void initNavigationTabBar() {

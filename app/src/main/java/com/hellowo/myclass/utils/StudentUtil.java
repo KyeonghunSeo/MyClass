@@ -46,6 +46,7 @@ public class StudentUtil {
 
             realm.commitTransaction();
         } catch (NoClassDefFoundError | Exception e) {
+            realm.cancelTransaction();
             DialogUtil.showAlertDialog(
                     activity,
                     activity.getString(R.string.error_read_csv_title),

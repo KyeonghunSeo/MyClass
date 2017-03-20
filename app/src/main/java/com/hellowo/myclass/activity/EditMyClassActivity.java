@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,7 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityEditClassBinding;
 import com.hellowo.myclass.model.MyClass;
+import com.hellowo.myclass.utils.FileUtil;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.io.File;
@@ -101,12 +103,14 @@ public class EditMyClassActivity extends AppCompatActivity {
                 .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                     @Override
                     public void onImageSelected(Uri uri) {
-                        myClass.classImageUri = uri.getPath();
+                        myClass.classImageUri = FileUtil.getPath(getBaseContext(), uri);
                         Glide.with(EditMyClassActivity.this)
-                                .load(new File(uri.getPath()))
+                                .load(uri)
                                 .into(binding.classImageButton);
                     }
-                }).create();
+                })
+                .setMaxCount(100)
+                .create();
         bottomSheetDialogFragment.show(getSupportFragmentManager());
     }
 
