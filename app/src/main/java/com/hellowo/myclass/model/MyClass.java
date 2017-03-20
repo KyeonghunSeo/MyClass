@@ -9,10 +9,10 @@ import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 public class MyClass extends RealmObject {
-    public static final String KEY_ID = "id";
+    public static final String KEY_ID = "classId";
 
     @PrimaryKey
-    public String id;
+    public String classId;
 
     public String schoolName;
     public String grade;
@@ -24,7 +24,7 @@ public class MyClass extends RealmObject {
     @Override
     public String toString() {
         return "MyClass{" +
-                "id='" + id + '\'' +
+                "id='" + classId + '\'' +
                 ", schoolName='" + schoolName + '\'' +
                 ", grade='" + grade + '\'' +
                 ", classNumber='" + classNumber + '\'' +

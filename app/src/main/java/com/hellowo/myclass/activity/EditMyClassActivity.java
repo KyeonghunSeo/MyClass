@@ -4,19 +4,14 @@ import android.Manifest;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.hellowo.myclass.R;
-import com.hellowo.myclass.databinding.ActivityChooseClassBinding;
 import com.hellowo.myclass.databinding.ActivityEditClassBinding;
 import com.hellowo.myclass.model.MyClass;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -24,14 +19,13 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
 
 public class EditMyClassActivity extends AppCompatActivity {
-    private final static String INTENT_KEY_MY_CLASS_ID = "INTENT_KEY_MY_CLASS_ID";
+    public final static String INTENT_KEY_MY_CLASS_ID = "INTENT_KEY_MY_CLASS_ID";
     private ActivityEditClassBinding binding;
     private Realm realm;
     private MyClass myClass;
@@ -144,8 +138,8 @@ public class EditMyClassActivity extends AppCompatActivity {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                if(TextUtils.isEmpty(myClass.id)){
-                    myClass.id = UUID.randomUUID().toString();
+                if(TextUtils.isEmpty(myClass.classId)){
+                    myClass.classId = UUID.randomUUID().toString();
                 }
                 myClass.classYear = Integer.valueOf(binding.classYearTextButton.getText().toString());
                 myClass.schoolName = binding.schoolNameEditText.getText().toString().trim();

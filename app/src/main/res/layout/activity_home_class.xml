@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/parent"
@@ -12,7 +11,7 @@
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
+            android:layout_height="300dp"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -21,9 +20,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
+                android:elevation="5dp"
                 app:title="@string/app_name"
                 app:expandedTitleTextAppearance="@null"
-                app:contentScrim="#605271"
+                app:contentScrim="@color/white"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
@@ -32,10 +32,11 @@
                     android:layout_height="match_parent"
                     android:fitsSystemWindows="true"
                     android:background="@color/white"
-                    android:src="@drawable/ic_eighth"
-                    android:tint="#9f90af"
-                    android:padding="32dp"
-                    app:layout_collapseMode="pin"/>
+                    android:src="@drawable/default_class_img"
+                    app:layout_collapseMode="pin"
+                    android:cropToPadding="false"
+                    android:adjustViewBounds="false"
+                    android:scaleType="center" />
 
                 <android.support.v7.widget.Toolbar
                     android:layout_width="match_parent"
@@ -59,14 +60,10 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            app:ntb_badge_size="12sp"
-            app:ntb_badge_bg_color="#ffff0000"
-            app:ntb_badge_gravity="top"
-            app:ntb_badge_position="left"
-            app:ntb_badge_title_color="#ffffffff"
-            app:ntb_badge_use_typeface="true"
-            app:ntb_badged="true"
-            app:ntb_typeface="fonts/agency.ttf"/>
+            android:background="@color/white"
+            android:elevation="5dp"
+            app:ntb_badged="false"
+            app:ntb_bg_color="@color/white"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -77,8 +74,8 @@
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:tint="#9f90af"
-            android:src="@drawable/ic_first"
-            app:backgroundTint="#605271"/>
+            android:src="@drawable/ic_edit_black_48dp"
+            app:backgroundTint="@color/white"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

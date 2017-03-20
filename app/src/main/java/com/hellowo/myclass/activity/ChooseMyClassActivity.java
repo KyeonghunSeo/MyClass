@@ -122,7 +122,7 @@ public class ChooseMyClassActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(ChooseMyClassActivity.this, HomeMyClassActivity.class);
-                    intent.putExtra(HomeMyClassActivity.INTENT_KEY_MY_CLASS_ID, myClass.id);
+                    intent.putExtra(HomeMyClassActivity.INTENT_KEY_MY_CLASS_ID, myClass.classId);
                     startActivity(intent);
                 }
             });

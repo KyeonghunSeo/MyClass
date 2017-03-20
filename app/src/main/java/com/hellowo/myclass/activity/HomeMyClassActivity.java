@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,14 +13,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.hellowo.myclass.AppScreen;
 import com.hellowo.myclass.R;
+import com.hellowo.myclass.adapter.StudentListAdapter;
 import com.hellowo.myclass.databinding.ActivityHomeClassBinding;
 import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
@@ -62,26 +60,16 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 .equalTo(MyClass.KEY_ID, myClassId)
                 .findFirst();
         studentRealmResults = realm.where(Student.class)
-                .equalTo(MyClass.KEY_ID, myClassId)
+                .equalTo(Student.KEY_MY_CLASS_ID, myClassId)
                 .findAll();
         studentRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Student>>() {
             @Override
             public void onChange(RealmResults<Student> element) {
-                for(Student student : element){
-                    Log.i("aaa", student.toString());
-                }
             }
         });
     }
 
     private void initToolBarLayout() {
-        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                startFilePickerActivity();
-            }
-        });
-
         final CollapsingToolbarLayout collapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.toolbar);
         collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#009F90AF"));
@@ -108,7 +96,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
             @Override
             public Object instantiateItem(final ViewGroup container, final int position) {
                 final View view = LayoutInflater.from(
-                        getBaseContext()).inflate(R.layout.item_vp_list, null, false);
+                        getBaseContext()).inflate(R.layout.item_home_myclass_pager, null, false);
 
                 final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
                 recyclerView.setHasFixedSize(true);
@@ -116,8 +104,10 @@ public class HomeMyClassActivity extends AppCompatActivity {
                                 getBaseContext(), LinearLayoutManager.VERTICAL, false
                         )
                 );
-                recyclerView.setAdapter(new RecycleAdapter());
-
+                recyclerView.setAdapter(new StudentListAdapter(
+                        HomeMyClassActivity.this,
+                        studentRealmResults)
+                );
                 container.addView(view);
                 return view;
             }
@@ -125,58 +115,52 @@ public class HomeMyClassActivity extends AppCompatActivity {
     }
 
     private void initNavigationTabBar() {
-        final String[] colors = getResources().getStringArray(R.array.default_preview);
         final NavigationTabBar navigationTabBar = binding.homeNavigationTabBar;
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_first),
-                        Color.parseColor(colors[0]))
+                        getResources().getDrawable(R.drawable.ic_face_black_48dp),
+                        getResources().getColor(R.color.primary))
                         .title("Heart")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_second),
-                        Color.parseColor(colors[1]))
+                        getResources().getDrawable(R.drawable.ic_date_range_black_48dp),
+                        getResources().getColor(R.color.primary))
                         .title("Cup")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_third),
-                        Color.parseColor(colors[2]))
+                        getResources().getDrawable(R.drawable.ic_home_black_48dp),
+                        getResources().getColor(R.color.primary))
                         .title("Diploma")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fourth),
-                        Color.parseColor(colors[3]))
+                        getResources().getDrawable(R.drawable.ic_equalizer_black_48dp),
+                        getResources().getColor(R.color.primary))
                         .title("Flag")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fifth),
-                        Color.parseColor(colors[4]))
+                        getResources().getDrawable(R.drawable.ic_settings_black_48dp),
+                        getResources().getColor(R.color.primary))
                         .title("Medal")
                         .build()
         );
 
         navigationTabBar.setModels(models);
-        navigationTabBar.setAnimationDuration(100);
+        navigationTabBar.setAnimationDuration(150);
         navigationTabBar.setViewPager(binding.homeViewPager, 2);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            navigationTabBar.setElevation((float) AppScreen.dpToPx(20));
-        }
         navigationTabBar.setBehaviorEnabled(true);
 
         navigationTabBar.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
             @Override
-            public void onStartTabSelected(final NavigationTabBar.Model model, final int index) {
-            }
-
+            public void onStartTabSelected(final NavigationTabBar.Model model, final int index) {}
             @Override
             public void onEndTabSelected(final NavigationTabBar.Model model, final int index) {
                 model.hideBadge();
@@ -185,19 +169,12 @@ public class HomeMyClassActivity extends AppCompatActivity {
 
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
-
-            }
-
+            public void onPageScrolled(final int position, final float positionOffset,
+                                       final int positionOffsetPixels) {}
             @Override
-            public void onPageSelected(final int position) {
-
-            }
-
+            public void onPageSelected(final int position) {}
             @Override
-            public void onPageScrollStateChanged(final int state) {
-
-            }
+            public void onPageScrollStateChanged(final int state) {}
         });
     }
 
@@ -220,35 +197,6 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 Environment.getExternalStorageDirectory().getPath());
 
         startActivityForResult(i, FILE_CODE);
-    }
-
-    public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
-
-        @Override
-        public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-            final View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.item_list, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-            holder.txt.setText(String.format("Navigation Item #%d", position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return 20;
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
-            public TextView txt;
-
-            public ViewHolder(final View itemView) {
-                super(itemView);
-                txt = (TextView) itemView.findViewById(R.id.txt_vp_item_list);
-            }
-        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

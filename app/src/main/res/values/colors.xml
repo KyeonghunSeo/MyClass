@@ -11,4 +11,5 @@
     <color name="main_background_dark">#FFFFFFFF</color>
     <color name="main_background">#FFFFFFFF</color>
     <color name="main_text">#566270</color>
+    <color name="pressed">#80595C60</color>
 </resources>

@@ -31,7 +31,7 @@ public class StudentUtil {
 
             while ((object = reader.readNext()) != null) {
                 Student student = new Student();
-                student.id = UUID.randomUUID().toString();
+                student.studentId = UUID.randomUUID().toString();
                 student.number = ++number;
                 student.name = object[0];
                 student.phoneNumber = object[1];
@@ -59,5 +59,7 @@ public class StudentUtil {
             );
         }
     }
+
+
 
 }
