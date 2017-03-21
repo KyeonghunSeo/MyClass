@@ -2,12 +2,14 @@
     <string name="app_name">MyClass</string>
     <string name="my_classes">.</string>
     <string name="edit_class">새 학급 만들기</string>
-    <string name="add_class">EditClassActivity</string>
-    <string name="action_settings">Settings</string>
+    <string name="add_class">학급 정보 편집하기</string>
+    <string name="action_settings">환경 설정</string>
     <string name="ask_storage_permission">사진을 가져오려면 권한을 설정하셔야 합니다.</string>
     <string name="denied_storage_permission">권한을 거부하셨습니다\\n다시 설정하시려면 설정 페이지로 가주세요.</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
     <string name="error_read_csv_title">파일 불러오기 실패</string>
     <string name="error_read_csv_message">확장자가 CSV인 파일만 불러올 수 있습니다.</string>
+    <string name="grade">학년</string>
+    <string name="class_number">반</string>
 </resources>

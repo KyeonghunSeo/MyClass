@@ -2,15 +2,20 @@ package com.hellowo.myclass;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 public class App extends Application{
 
+    public static App baseContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        baseContext = this;
         initRealm();
         AppScreen.init(this);
     }

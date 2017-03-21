@@ -62,13 +62,13 @@ public class StudentListAdapter
         holder.binding.itemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                itemClicked(holder.binding, position);
+                itemClicked(position);
             }
         });
     }
 
-    private void itemClicked(ItemStudentListBinding binding, final int position) {
-        if(currentExpandedItemPosition > 0){
+    private void itemClicked(final int position) {
+        if(currentExpandedItemPosition >= 0){
             notifyItemChanged(currentExpandedItemPosition);
         }
         currentExpandedItemPosition = position;

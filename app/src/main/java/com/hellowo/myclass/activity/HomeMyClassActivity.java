@@ -3,6 +3,7 @@ package com.hellowo.myclass.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,13 +12,18 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.adapter.StudentListAdapter;
 import com.hellowo.myclass.databinding.ActivityHomeClassBinding;
@@ -77,10 +83,31 @@ public class HomeMyClassActivity extends AppCompatActivity {
             }
         });
 
-        final CollapsingToolbarLayout collapsingToolbarLayout =
-                (CollapsingToolbarLayout) findViewById(R.id.toolbar);
-        collapsingToolbarLayout.setExpandedTitleColor(Color.parseColor("#009F90AF"));
-        collapsingToolbarLayout.setCollapsedTitleTextColor(Color.parseColor("#9f90af"));
+        binding.toolbar.setTitle(myClass.getClassTitle());
+        binding.toolbar.setExpandedTitleColor(getResources().getColor(R.color.blank));
+        binding.toolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.primary));
+
+        if(!TextUtils.isEmpty(myClass.classImageUri)) {
+            /*
+            Glide.with(this)
+                    .load(new File(myClass.classImageUri))
+                    .asBitmap()
+                    .into(new BitmapImageViewTarget(binding.classMainImage) {
+                        @Override public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                            super.onResourceReady(bitmap, anim);
+                            Palette palette = Palette.from(bitmap).generate();
+                            Palette.Swatch swatch = palette.getLightMutedSwatch();
+                            binding.toolbar.setExpandedTitleColor(swatch.getRgb());
+                            binding.toolbar.setCollapsedTitleTextColor(swatch.getRgb());
+                        }
+                    });
+                    */
+            Glide.with(this)
+                    .load(new File(myClass.classImageUri))
+                    .centerCrop()
+                    .into(binding.classMainImage);
+        }
+
     }
 
     private void initViewPager() {

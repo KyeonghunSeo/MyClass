@@ -1,5 +1,8 @@
 package com.hellowo.myclass.model;
 
+import com.hellowo.myclass.App;
+import com.hellowo.myclass.R;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -32,5 +35,11 @@ public class MyClass extends RealmObject {
                 ", classYear=" + classYear +
                 ", lastUpdated=" + DateFormat.getDateTimeInstance().format(new Date(lastUpdated)) +
                 '}';
+    }
+
+    public String getClassTitle() {
+        return schoolName
+                + " " + grade + App.baseContext.getString(R.string.grade)
+                + " " + classNumber + App.baseContext.getString(R.string.class_number);
     }
 }
