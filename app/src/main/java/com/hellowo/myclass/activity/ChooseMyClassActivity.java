@@ -29,6 +29,8 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
+
 public class ChooseMyClassActivity extends AppCompatActivity {
     final static float PAGER_ITEM_DEFAULT_SCALE = 0.1f;
     private ActivityChooseClassBinding binding;
@@ -123,8 +125,9 @@ public class ChooseMyClassActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(ChooseMyClassActivity.this, HomeMyClassActivity.class);
-                    intent.putExtra(HomeMyClassActivity.INTENT_KEY_MY_CLASS_ID, myClass.classId);
+                    intent.putExtra(INTENT_KEY_MY_CLASS_ID, myClass.classId);
                     startActivity(intent);
+                    finish();
                 }
             });
             binding.schoolNameText.setText(myClass.schoolName);

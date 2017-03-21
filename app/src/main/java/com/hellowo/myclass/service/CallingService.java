@@ -106,15 +106,14 @@ public class CallingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        try{ //다른 앱 위에 그릴수 있는 권한이 필요함
+            windowManager.addView(rootView, params);
+            setExtra(intent);
 
-        windowManager.addView(rootView, params);
-        setExtra(intent);
-
-
-        if (!TextUtils.isEmpty(call_number)) {
-            tv_call_number.setText(call_number);
-        }
-
+            if (!TextUtils.isEmpty(call_number)) {
+                tv_call_number.setText(call_number);
+            }
+        }catch (Exception ignore){}
 
         return START_REDELIVER_INTENT;
     }

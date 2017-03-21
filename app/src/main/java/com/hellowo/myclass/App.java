@@ -2,8 +2,11 @@ package com.hellowo.myclass;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+
+import com.pixplicity.easyprefs.library.Prefs;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -17,6 +20,7 @@ public class App extends Application{
         super.onCreate();
         baseContext = this;
         initRealm();
+        initPrefs();
         AppScreen.init(this);
     }
 
@@ -28,5 +32,14 @@ public class App extends Application{
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().build();
         Realm.setDefaultConfiguration(config);
+    }
+
+    private void initPrefs() {
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
+                .build();
     }
 }

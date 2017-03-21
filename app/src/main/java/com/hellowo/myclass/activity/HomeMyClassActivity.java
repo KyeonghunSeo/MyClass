@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.hellowo.myclass.AppConst;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.adapter.StudentListAdapter;
 import com.hellowo.myclass.databinding.ActivityHomeClassBinding;
@@ -31,6 +32,7 @@ import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
 import com.hellowo.myclass.utils.StudentUtil;
 import com.nononsenseapps.filepicker.FilePickerActivity;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,8 +42,9 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
+
 public class HomeMyClassActivity extends AppCompatActivity {
-    public final static String INTENT_KEY_MY_CLASS_ID = "INTENT_KEY_MY_CLASS_ID";
     public final static int FILE_CODE = 8250;
     private ActivityHomeClassBinding binding;
     private Realm realm;
@@ -203,6 +206,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
         );
 
         navigationTabBar.setModels(models);
+        navigationTabBar.setInactiveColor(getResources().getColor(R.color.primary));
         navigationTabBar.setAnimationDuration(150);
         navigationTabBar.setViewPager(binding.homeViewPager, 2);
         navigationTabBar.setBehaviorEnabled(true);
@@ -254,6 +258,12 @@ public class HomeMyClassActivity extends AppCompatActivity {
             File file = com.nononsenseapps.filepicker.Utils.getFileForUri(uri);
             StudentUtil.insertDataToRealmFromCsvFile(HomeMyClassActivity.this, file, realm, myClass);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Prefs.putString(AppConst.KEY_LAST_MY_CLASS_ID, myClass.classId);
     }
 
     @Override

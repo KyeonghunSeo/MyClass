@@ -18,6 +18,8 @@ import com.hellowo.myclass.model.Student;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
+
 public class StudentListAdapter
         extends RealmRecyclerViewAdapter<Student, StudentListAdapter.MyViewHolder> {
     Activity activity;
@@ -41,10 +43,8 @@ public class StudentListAdapter
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Student student = getItem(position);
         holder.binding.nameText.setText(student.name);
-        holder.binding.studentImage.setColorFilter(activity.getResources().getColor(R.color.primary));
 
         if(position == currentExpandedItemPosition){
-            Log.i("aaa", "currentExpandedItemPosition " + currentExpandedItemPosition);
             holder.binding.expandableMenuLayout.setVisibility(View.VISIBLE);
         }else{
             holder.binding.expandableMenuLayout.setVisibility(View.GONE);
@@ -54,7 +54,7 @@ public class StudentListAdapter
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, StudentActivity.class);
-                intent.putExtra(StudentActivity.INTENT_KEY_STUDENT_ID, student.studentId);
+                intent.putExtra(INTENT_KEY_STUDENT_ID, student.studentId);
                 activity.startActivity(intent);
             }
         });

@@ -61,7 +61,7 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:background="@color/white"
-            android:elevation="5dp"
+            android:elevation="10dp"
             app:ntb_badged="false"
             app:ntb_bg_color="@color/white"/>
 
@@ -73,7 +73,7 @@
             android:layout_marginBottom="76dp"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:tint="#9f90af"
+            android:tint="@color/primary"
             android:src="@drawable/ic_edit_black_48dp"
             app:backgroundTint="@color/white"/>
 

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -18,7 +17,6 @@ import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.utils.FileUtil;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
@@ -26,8 +24,9 @@ import java.util.UUID;
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
+
 public class EditMyClassActivity extends AppCompatActivity {
-    public final static String INTENT_KEY_MY_CLASS_ID = "INTENT_KEY_MY_CLASS_ID";
     private ActivityEditClassBinding binding;
     private Realm realm;
     private MyClass myClass;
@@ -121,7 +120,7 @@ public class EditMyClassActivity extends AppCompatActivity {
                 new TedPermission(EditMyClassActivity.this)
                         .setPermissionListener(permissionlistener)
                         .setRationaleMessage(getString(R.string.ask_storage_permission))
-                        .setDeniedMessage(getString(R.string.denied_storage_permission))
+                        .setDeniedMessage(getString(R.string.denied_permission))
                         .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .check();
             }

@@ -23,6 +23,10 @@ android {
     }
 }
 
+repositories {
+    maven { url "http://dl.bintray.com/pixplicity/maven" }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -48,6 +52,7 @@ dependencies {
 
     // 파일 관련 라이브러리
     compile 'com.nononsenseapps:filepicker:4.0.0'
+    compile 'com.pixplicity.easyprefs:library:1.8.1@aar'
 
     testCompile 'junit:junit:4.12'
 }

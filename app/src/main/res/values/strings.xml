@@ -5,7 +5,8 @@
     <string name="add_class">학급 정보 편집하기</string>
     <string name="action_settings">환경 설정</string>
     <string name="ask_storage_permission">사진을 가져오려면 권한을 설정하셔야 합니다.</string>
-    <string name="denied_storage_permission">권한을 거부하셨습니다\\n다시 설정하시려면 설정 페이지로 가주세요.</string>
+    <string name="denied_permission">권한을 거부하셨습니다.\n다시 설정하시려면 설정 페이지로 가주세요.</string>
+    <string name="ask_phone_permission">학생들에게 전화하기 기능 사용을 위해서 권한을 설정하셔야 합니다.</string>
     <string name="ok">확인</string>
     <string name="cancel">취소</string>
     <string name="error_read_csv_title">파일 불러오기 실패</string>
