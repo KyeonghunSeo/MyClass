@@ -10,23 +10,23 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hellowo.myclass.R;
-
-import static android.app.Service.START_REDELIVER_INTENT;
 
 public class CallingService extends Service {
 
     public static final String EXTRA_CALL_NUMBER = "call_number";
     protected View rootView;
-    protected TextView tv_call_number;
+    protected ImageView studentImage;
+    protected TextView nameText;
+    protected TextView callNumberText;
 
     String call_number;
 
     WindowManager.LayoutParams params;
     private WindowManager windowManager;
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -54,25 +54,23 @@ public class CallingService extends Service {
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
                 PixelFormat.TRANSLUCENT);
 
-
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         rootView = layoutInflater.inflate(R.layout.window_calling_popup, null);
-        tv_call_number = (TextView) rootView.findViewById(R.id.tv_call_number);
-        rootView.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+        studentImage = (ImageView) rootView.findViewById(R.id.studentImage);
+        nameText = (TextView) rootView.findViewById(R.id.nameText);
+        callNumberText = (TextView) rootView.findViewById(R.id.callNumberText);
+
+
+        rootView.findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 removePopup();
             }
         });
         setDraggable();
-
-
     }
 
-
-
     private void setDraggable() {
-
         rootView.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
             private int initialY;
@@ -101,7 +99,6 @@ public class CallingService extends Service {
                 return false;
             }
         });
-
     }
 
     @Override
@@ -111,7 +108,7 @@ public class CallingService extends Service {
             setExtra(intent);
 
             if (!TextUtils.isEmpty(call_number)) {
-                tv_call_number.setText(call_number);
+                callNumberText.setText(call_number);
             }
         }catch (Exception ignore){}
 
@@ -120,15 +117,11 @@ public class CallingService extends Service {
 
 
     private void setExtra(Intent intent) {
-
         if (intent == null) {
             removePopup();
             return;
         }
-
         call_number = intent.getStringExtra(EXTRA_CALL_NUMBER);
-
-
     }
 
 

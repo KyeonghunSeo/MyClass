@@ -1,5 +1,6 @@
 package com.hellowo.myclass.model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,6 +12,7 @@ public class Student extends RealmObject {
     public String studentId;
 
     public MyClass myClass;
+    public RealmList<Event> events;
     public String name;
     public String profileImageUri;
     public String address;

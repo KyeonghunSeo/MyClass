@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +14,7 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityStudentBinding;
 import com.hellowo.myclass.model.Student;
+import com.hellowo.myclass.utils.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,11 +36,11 @@ public class StudentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_student);
         realm = Realm.getDefaultInstance();
 
-        initMyClass();
+        initStudent();
         initClassImageButton();
     }
 
-    private void initMyClass() {
+    private void initStudent() {
         String studentId = getIntent().getStringExtra(INTENT_KEY_STUDENT_ID);
         student = realm.where(Student.class)
                 .equalTo(Student.KEY_ID, studentId)
@@ -59,11 +61,14 @@ public class StudentActivity extends AppCompatActivity {
         TedBottomPicker bottomSheetDialogFragment = new TedBottomPicker.Builder(StudentActivity.this)
                 .setOnImageSelectedListener(new TedBottomPicker.OnImageSelectedListener() {
                     @Override
-                    public void onImageSelected(Uri uri) {
-                        student.profileImageUri = uri.getPath();
-                        Glide.with(StudentActivity.this)
-                                .load(new File(uri.getPath()))
-                                .into(binding.studentImageButton);
+                    public void onImageSelected(final Uri uri) {
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                student.profileImageUri = FileUtil.getPath(getBaseContext(), uri);
+                                setStudentImage();
+                            }
+                        });
                     }
                 }).create();
         bottomSheetDialogFragment.show(getSupportFragmentManager());
@@ -81,6 +86,16 @@ public class StudentActivity extends AppCompatActivity {
                         .check();
             }
         });
+
+        setStudentImage();
+    }
+
+    private void setStudentImage() {
+        if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
+            Glide.with(StudentActivity.this)
+                    .load(new File(student.profileImageUri))
+                    .into(binding.studentImageButton);
+        }
     }
 
     @Override

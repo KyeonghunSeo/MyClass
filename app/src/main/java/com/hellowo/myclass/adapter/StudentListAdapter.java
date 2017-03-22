@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.activity.StudentActivity;
 import com.hellowo.myclass.databinding.ItemStudentListBinding;
 import com.hellowo.myclass.model.Student;
+
+import java.io.File;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
@@ -65,6 +69,18 @@ public class StudentListAdapter
                 itemClicked(position);
             }
         });
+
+        setStudentImage(holder.binding, student);
+    }
+
+    private void setStudentImage(ItemStudentListBinding binding, Student student) {
+        if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
+            Glide.with(activity)
+                    .load(new File(student.profileImageUri))
+                    .into(binding.studentImage);
+        }else{
+            binding.studentImage.setImageResource(R.drawable.default_people_img);
+        }
     }
 
     private void itemClicked(final int position) {
