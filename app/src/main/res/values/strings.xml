@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MyClass</string>
-    <string name="my_classes">.</string>
+    <string name="my_classes">우리 학급</string>
     <string name="edit_class">새 학급 만들기</string>
     <string name="add_class">학급 정보 편집하기</string>
     <string name="action_settings">환경 설정</string>
@@ -13,4 +13,12 @@
     <string name="error_read_csv_message">확장자가 CSV인 파일만 불러올 수 있습니다.</string>
     <string name="grade">학년</string>
     <string name="class_number">반</string>
+    <string name="attendance">출석</string>
+    <string name="absent_sick">병가</string>
+    <string name="absent_early">조퇴</string>
+    <string name="absent">결석</string>
+    <string name="announcement">발표</string>
+    <string name="consulting">상담</string>
+    <string name="thumbs_up">칭찬</string>
+    <string name="thumbs_down">꾸중</string>
 </resources>

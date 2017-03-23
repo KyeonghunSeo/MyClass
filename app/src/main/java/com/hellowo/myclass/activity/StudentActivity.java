@@ -2,15 +2,21 @@ package com.hellowo.myclass.activity;
 
 import android.Manifest;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.hellowo.myclass.AppFont;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityStudentBinding;
 import com.hellowo.myclass.model.Student;
@@ -18,6 +24,7 @@ import com.hellowo.myclass.utils.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
@@ -38,6 +45,9 @@ public class StudentActivity extends AppCompatActivity {
 
         initStudent();
         initTitle();
+        initPhoneNumber();
+        initAddress();
+        initBirth();
         initClassImageButton();
     }
 
@@ -49,7 +59,23 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     private void initTitle() {
-        binding.topTitleText.setText(student.getNumberName());
+        binding.topTitleText.setTypeface(AppFont.mainConceptBold);
+        binding.topTitleText.setText(student.name);
+    }
+
+    private void initPhoneNumber() {
+        binding.phoneText.setTypeface(AppFont.mainConceptBold);
+        binding.phoneText.setText(student.phoneNumber);
+    }
+
+    private void initAddress() {
+        binding.addressText.setTypeface(AppFont.mainConceptBold);
+        binding.addressText.setText(student.address);
+    }
+
+    private void initBirth() {
+        binding.birthText.setTypeface(AppFont.mainConceptBold);
+        binding.birthText.setText(DateFormat.getLongDateFormat(this).format(new Date(student.birth)));
     }
 
     PermissionListener permissionlistener = new PermissionListener() {
@@ -97,9 +123,24 @@ public class StudentActivity extends AppCompatActivity {
 
     private void setStudentImage() {
         if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
-            Glide.with(StudentActivity.this)
+            Glide.with(this)
                     .load(new File(student.profileImageUri))
-                    .into(binding.studentImageButton);
+                    .asBitmap()
+                    .into(new BitmapImageViewTarget(binding.studentImageButton) {
+                        @Override public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                            super.onResourceReady(bitmap, anim);
+                            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    if(palette.getSwatches().size() > 0){
+                                        binding.appbar.setBackgroundColor(
+                                                palette.getSwatches().get(0).getRgb()
+                                        );
+                                    }
+                                }
+                            });
+                        }
+                    });
         }
     }
 

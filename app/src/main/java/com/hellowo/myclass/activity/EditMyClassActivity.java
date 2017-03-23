@@ -83,7 +83,7 @@ public class EditMyClassActivity extends AppCompatActivity {
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
         dpd.showYearPickerFirst(true);
-        dpd.setAccentColor(getResources().getColor(R.color.highlight));
+        dpd.setAccentColor(getResources().getColor(R.color.primary));
         dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 

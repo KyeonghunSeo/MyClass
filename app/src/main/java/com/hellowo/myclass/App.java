@@ -22,6 +22,7 @@ public class App extends Application{
         initRealm();
         initPrefs();
         AppScreen.init(this);
+        AppFont.init(this);
     }
 
     /**

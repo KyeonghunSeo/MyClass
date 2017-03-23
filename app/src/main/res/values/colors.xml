@@ -7,9 +7,7 @@
     <color name="primary_dark">#1e2022</color>
     <color name="accent">#c9d6de</color>
 
-    <color name="highlight">#52616a</color>
-    <color name="main_background_dark">#f0f5f9</color>
-    <color name="main_background">#f0f5f9</color>
-    <color name="main_text">#1e2022</color>
+    <color name="main_background_dark">#FFFFFFFF</color>
+    <color name="main_background">#FFFFFFFF</color>
     <color name="pressed">#8052616a</color>
 </resources>
