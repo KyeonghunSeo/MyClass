@@ -32,12 +32,12 @@ public class ProfileImageBehavior extends CoordinatorLayout.Behavior<CircleImage
 
     public ProfileImageBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        startX = AppScreen.getDeviceWidth(context) / 2 - AppScreen.dpToPx(150) / 2;
-        endX = AppScreen.getDeviceWidth(context) - AppScreen.dpToPx(150);
-        startY = AppScreen.dpToPx(75);
-        endY = AppScreen.dpToPx(0);
         minHeaderHeight = AppScreen.topToolbarHeight + /*하단 걸리는 부분*/AppScreen.dpToPx(60);
         statusBarHeight = AppScreen.getStatusBarHeight(context);
+        startX = AppScreen.getDeviceWidth(context) / 2 - AppScreen.dpToPx(75);
+        endX = AppScreen.getDeviceWidth(context) - AppScreen.dpToPx(110);
+        startY = AppScreen.dpToPx(75) + statusBarHeight;
+        endY = -(AppScreen.dpToPx(75) / 2) + statusBarHeight;
     }
 
     @Override
