@@ -38,4 +38,8 @@ public class Student extends RealmObject {
                 ", lastUpdated=" + lastUpdated +
                 '}';
     }
+
+    public String getNumberName() {
+        return number + ". " + name;
+    }
 }

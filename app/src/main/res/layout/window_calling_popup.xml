@@ -20,7 +20,7 @@
                 android:layout_height="72dp"
                 app:civ_border_color="@color/cardview_shadow_start_color"
                 app:civ_border_width="0dp"
-                android:src="@drawable/default_people_img"
+                android:src="@drawable/default_profile_circle"
                 android:padding="15dp" />
 
             <LinearLayout

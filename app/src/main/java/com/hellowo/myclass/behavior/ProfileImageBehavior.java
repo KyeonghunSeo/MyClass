@@ -12,36 +12,56 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 
+import com.hellowo.myclass.App;
+import com.hellowo.myclass.AppConst;
 import com.hellowo.myclass.AppScreen;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileImageBehavior extends CoordinatorLayout.Behavior<CircleImageView> {
+    final static float END_RATIO = 0.33f;
+    final static int END_MARGIN = AppScreen.dpToPx(10);
     int startX;
     int startY;
+    int endX;
+    int endY;
     int minHeaderHeight;
+    int statusBarHeight;
 
     public ProfileImageBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
-        startX = AppScreen.getDeviceWidth(context) / 2 - AppScreen.dpToPx(200) / 2;
-        startY = AppScreen.dpToPx(50);
-        minHeaderHeight = AppScreen.dpToPx(70);
-    }
-
-    @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, CircleImageView child, View dependency) {
-        return dependency instanceof AppBarLayout;
+        startX = AppScreen.getDeviceWidth(context) / 2 - AppScreen.dpToPx(150) / 2;
+        endX = AppScreen.getDeviceWidth(context) - AppScreen.dpToPx(150);
+        startY = AppScreen.dpToPx(75);
+        endY = AppScreen.dpToPx(0);
+        minHeaderHeight = AppScreen.topToolbarHeight + /*하단 걸리는 부분*/AppScreen.dpToPx(60);
+        statusBarHeight = AppScreen.getStatusBarHeight(context);
     }
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, CircleImageView child, View dependency) {
-        if(dependency instanceof AppBarLayout){
-            Log.i("minHeaderHeight", "CollapsingToolbarLayout");
-        }
-            Log.i("minHeaderHeight", ""+minHeaderHeight);
-        Log.i("aaa", ""+dependency.getY());
-        child.setX(startX);
+        return dependency instanceof AppBarLayout;
+    }
+
+    @Override
+    public boolean onDependentViewChanged(CoordinatorLayout parent, CircleImageView child, View dependency) {
+        int maxScroll = dependency.getHeight() - minHeaderHeight;
+        float scroll = maxScroll + (dependency.getY() - statusBarHeight);
+
+        float scroll_rate = scroll / maxScroll;
+        Log.i("aaa", "scroll_rate/"+scroll_rate);
+
+        float scale = END_RATIO + (scroll_rate * (1 - END_RATIO));
+        float x = startX + (endX - startX) * (1 - scroll_rate);
+        float y = startY + (endY - startY) * (1 - scroll_rate);
+
+        child.setScaleX(scale);
+        child.setScaleY(scale);
+
+        child.setX(x);
+        child.setY(y);
         return false;
     }
 }

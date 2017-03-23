@@ -37,6 +37,7 @@ public class StudentActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
 
         initStudent();
+        initTitle();
         initClassImageButton();
     }
 
@@ -45,6 +46,10 @@ public class StudentActivity extends AppCompatActivity {
         student = realm.where(Student.class)
                 .equalTo(Student.KEY_ID, studentId)
                 .findFirst();
+    }
+
+    private void initTitle() {
+        binding.topTitleText.setText(student.getNumberName());
     }
 
     PermissionListener permissionlistener = new PermissionListener() {

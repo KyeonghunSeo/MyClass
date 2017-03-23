@@ -5,7 +5,7 @@
         android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/main_background"
         android:fitsSystemWindows="true"
         android:orientation="vertical">
 
@@ -20,9 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:minHeight="70dp"
-                android:background="@color/primary"
+                android:background="@color/main_background"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <FrameLayout
@@ -30,13 +29,12 @@
                 android:layout_height="60dp"
                 android:background="@color/accent">
             </FrameLayout>
-
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/mdtp_red"
+            android:background="@color/main_background"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
@@ -60,13 +58,41 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/studentImageButton"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             app:civ_border_color="@color/accent"
-            app:civ_border_width="1dp"
+            app:civ_border_width="0dp"
             app:layout_behavior="com.hellowo.myclass.behavior.ProfileImageBehavior"
-            android:src="@drawable/default_people_img"
-            android:elevation="20dp"/>
+            android:src="@drawable/default_profile_big_img"
+            android:background="@drawable/fill_circle_white"
+            android:elevation="5dp"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:elevation="5dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <TextView
+                android:text="Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/topTitleText"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:layout_gravity="center" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_keyboard_arrow_left_black_48dp"
+                android:id="@+id/topBackButton"
+                android:tint="@color/main_text"
+                android:background="@drawable/ripple_circle_button"
+                android:scaleType="centerInside"
+                android:layout_margin="10dp"
+                android:padding="8dp" />
+        </FrameLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 
