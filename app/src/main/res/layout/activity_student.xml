@@ -13,29 +13,19 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="1dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing"
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
+                android:layout_height="250dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-                <!--app:layout_behavior="com.hellowo.myclass.behavior.ProfileImageBehavior"-->
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/studentImageButton"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    app:civ_border_color="@color/main_background"
-                    app:civ_border_width="0dp"
-                    android:src="@drawable/default_profile_big_img"
-                    android:elevation="5dp"
-                    android:layout_gravity="bottom|center_horizontal"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <LinearLayout
+                android:id="@+id/appbarStatusLy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -47,7 +37,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/topTitleText"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textAllCaps="false" />
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -265,6 +256,35 @@
 
         </android.support.v4.widget.NestedScrollView>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:tint="@color/primary"
+            android:src="@drawable/ic_edit_black_48dp"
+            app:backgroundTint="@color/white"/>
+
+        <android.support.v7.widget.CardView
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="-10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp"
+            app:layout_behavior="com.hellowo.myclass.behavior.ProfileImageBehavior">
+
+            <ImageView
+                android:id="@+id/studentImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_profile_big_img"/>
+
+        </android.support.v7.widget.CardView>
+
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -273,9 +293,8 @@
             android:tint="@color/white"
             android:background="@drawable/ripple_circle_button"
             android:scaleType="centerInside"
-            android:layout_margin="10dp"
             android:padding="10dp"
-            android:elevation="5dp"/>
+            android:elevation="2dp"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

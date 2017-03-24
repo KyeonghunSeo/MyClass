@@ -125,22 +125,7 @@ public class StudentActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
             Glide.with(this)
                     .load(new File(student.profileImageUri))
-                    .asBitmap()
-                    .into(new BitmapImageViewTarget(binding.studentImageButton) {
-                        @Override public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                            super.onResourceReady(bitmap, anim);
-                            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    if(palette.getSwatches().size() > 0){
-                                        binding.appbar.setBackgroundColor(
-                                                palette.getSwatches().get(0).getRgb()
-                                        );
-                                    }
-                                }
-                            });
-                        }
-                    });
+                    .into(binding.studentImageButton);
         }
     }
 
