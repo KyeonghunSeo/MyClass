@@ -60,7 +60,6 @@ public class CallingService extends Service {
         nameText = (TextView) rootView.findViewById(R.id.nameText);
         callNumberText = (TextView) rootView.findViewById(R.id.callNumberText);
 
-
         rootView.findViewById(R.id.closeButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

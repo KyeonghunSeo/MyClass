@@ -31,11 +31,13 @@ import com.hellowo.myclass.databinding.ActivityHomeClassBinding;
 import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
 import com.hellowo.myclass.utils.StudentUtil;
+import com.hellowo.myclass.view.CalendarView;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import devlight.io.library.ntb.NavigationTabBar;
 import io.realm.Realm;
@@ -138,6 +140,9 @@ public class HomeMyClassActivity extends AppCompatActivity {
                     case 0:
                         view = createStudentListView();
                         break;
+                    case 1:
+                        view = createCalendarView();
+                        break;
                     default:
                         view = new View(HomeMyClassActivity.this);
                         break;
@@ -163,6 +168,11 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 HomeMyClassActivity.this,
                 studentRealmResults)
         );
+        return view;
+    }
+
+    private View createCalendarView() {
+        CalendarView view = new CalendarView(HomeMyClassActivity.this,  Calendar.getInstance());
         return view;
     }
 

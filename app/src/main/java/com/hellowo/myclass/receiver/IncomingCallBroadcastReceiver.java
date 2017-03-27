@@ -24,15 +24,15 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
          * 2번 호출되는 문제 해결
          */
         String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-        if (state.equals(mLastState)) {
+        String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+
+        if (state.equals(mLastState) || incomingNumber == null) {
             return;
         } else {
             mLastState = state;
         }
 
         if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {
-            String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-
             final String phone_number = PhoneNumberUtils.formatNumber(incomingNumber);
 
             Intent serviceIntent = new Intent(context, CallingService.class);

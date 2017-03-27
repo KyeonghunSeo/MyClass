@@ -23,7 +23,7 @@ import com.hellowo.myclass.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileImageBehavior extends CoordinatorLayout.Behavior<CardView> {
-    final static float END_RATIO = 0.33f;
+    final static float END_RATIO = 0.2f;
     float startRadius;
     int startX;
     int startY;
@@ -35,8 +35,8 @@ public class ProfileImageBehavior extends CoordinatorLayout.Behavior<CardView> {
         super(context, attrs);
         statusBarHeight = AppScreen.getStatusBarHeight(context);
         startRadius = AppScreen.dpToPx(10);
-        startX = AppScreen.dpToPx(0);
-        endX = AppScreen.dpToPx(0);
+        startX = AppScreen.dpToPx(50);
+        endX = AppScreen.dpToPx(200);
         startY = AppScreen.dpToPx(50);
         endY = AppScreen.dpToPx(50);
     }
@@ -48,19 +48,22 @@ public class ProfileImageBehavior extends CoordinatorLayout.Behavior<CardView> {
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, CardView child, View dependency) {
-        int maxScroll = dependency.getHeight() - dependency.findViewById(R.id.appbarStatusLy).getHeight();
+        int width =  dependency.getWidth();
+        int height = dependency.getHeight();
+        int maxScroll = height - dependency.findViewById(R.id.appbarStatusLy).getHeight();
         float scroll = maxScroll + (dependency.getY() - statusBarHeight);
 
         float scroll_rate = scroll / maxScroll;
         Log.i("aaa", "scroll_rate/"+scroll_rate);
 
+        float scale_x = END_RATIO + (scroll_rate * (1 - END_RATIO));
         float scale = END_RATIO + (scroll_rate * (1 - END_RATIO));
         float radius_scale = startRadius + (1 - scroll_rate) * ((child.getHeight() - startRadius) / 2);
         float x = startX + (endX - startX) * (1 - scroll_rate);
         float y = startY + (endY - startY) * (1 - scroll_rate);
 
         child.setRadius(radius_scale);
-        child.setScaleX(scale);
+        child.setScaleX(scale_x);
         child.setScaleY(scale);
         child.setX(x);
         child.setY(y);

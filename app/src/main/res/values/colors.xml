@@ -2,12 +2,13 @@
 <resources>
     <color name="blank">#00000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
 
     <color name="primary">#52616a</color>
     <color name="primary_dark">#1e2022</color>
     <color name="accent">#c9d6de</color>
 
-    <color name="main_background_dark">#FFFFFFFF</color>
+    <color name="main_background_dark">#f4f4f4</color>
     <color name="main_background">#FFFFFFFF</color>
     <color name="pressed">#8052616a</color>
 </resources>

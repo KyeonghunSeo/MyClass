@@ -43,12 +43,16 @@ public class StudentActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_student);
         realm = Realm.getDefaultInstance();
 
+        initLayout();
         initStudent();
         initTitle();
         initPhoneNumber();
         initAddress();
         initBirth();
         initClassImageButton();
+    }
+
+    private void initLayout() {
     }
 
     private void initStudent() {

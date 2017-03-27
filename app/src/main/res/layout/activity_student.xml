@@ -268,22 +268,12 @@
             android:src="@drawable/ic_edit_black_48dp"
             app:backgroundTint="@color/white"/>
 
-        <android.support.v7.widget.CardView
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="-10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="2dp"
-            app:layout_behavior="com.hellowo.myclass.behavior.ProfileImageBehavior">
-
-            <ImageView
-                android:id="@+id/studentImageButton"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/default_profile_big_img"/>
-
-        </android.support.v7.widget.CardView>
+        <ImageView
+            android:id="@+id/studentImageButton"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_profile_big_img"/>
 
         <ImageButton
             android:layout_width="50dp"
