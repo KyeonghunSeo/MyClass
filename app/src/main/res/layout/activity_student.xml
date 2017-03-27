@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/parent"
@@ -14,13 +15,183 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:fitsSystemWindows="true"
             app:elevation="1dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
+                android:fitsSystemWindows="true"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+                <ImageView
+                    android:id="@+id/classImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_class_img"/>
+
+                <ImageView
+                    android:id="@+id/studentImageButton"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_profile_big_img"
+                    app:layout_collapseMode="parallax"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_gravity="bottom" />
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_left_black_48dp"
+                    android:id="@+id/topBackButton"
+                    android:tint="@color/white"
+                    android:background="@drawable/ripple_circle_button"
+                    android:scaleType="centerInside"
+                    android:padding="10dp"
+                    android:layout_gravity="top|left"
+                    app:layout_collapseMode="pin"/>
+
+                <org.eazegraph.lib.charts.BarChart
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/barchart"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:egFixedBarWidth="true"
+                    app:egBarWidth="10dp"
+                    app:egLegendHeight="40dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="140dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_gravity="bottom">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:text="@string/absent"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/absentNumText"
+                            android:layout_marginLeft="1dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:text="@string/announcement"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/announcementNumText"
+                            android:layout_marginLeft="1dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:text="@string/consulting"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/consultingNumText"
+                            android:layout_marginLeft="1dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:text="@string/thumbs_up"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/thumbsUpNumText"
+                            android:layout_marginLeft="1dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:text="@string/thumbs_down"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/thumbsDownNumText"
+                            android:layout_marginLeft="1dp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -31,17 +202,48 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <TextView
-                    android:text="Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/topTitleText"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:layout_gravity="center"
-                    android:textAllCaps="false" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/topTitleText"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+                        android:textColor="@color/primary_dark" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="bottom">
+
+                        <ImageView
+                            android:tint="@color/primary_dark"
+                            app:srcCompat="@drawable/ic_cake_black_48dp"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp" />
+
+                        <TextView
+                            android:text="TextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/birthText"
+                            android:layout_marginLeft="3dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/primary_dark" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
@@ -65,7 +267,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/addressText"
-                            android:layout_weight="1"
                             android:layout_marginLeft="3dp" />
                     </LinearLayout>
 
@@ -73,8 +274,7 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="3dp">
+                        android:gravity="center_vertical">
 
                         <ImageView
                             android:tint="@color/white"
@@ -92,143 +292,10 @@
                             android:layout_marginLeft="3dp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="3dp">
-
-                        <ImageView
-                            android:tint="@color/white"
-                            app:srcCompat="@drawable/ic_cake_black_48dp"
-                            android:layout_weight="1"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp" />
-
-                        <TextView
-                            android:text="TextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/birthText"
-                            android:layout_weight="1"
-                            android:layout_marginLeft="3dp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="20dp">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:text="0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/absentNumText"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-                        <TextView
-                            android:text="@string/absent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:text="0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/announcementNumText"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-                        <TextView
-                            android:text="@string/announcement"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:text="0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/consultingNumText"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-                        <TextView
-                            android:text="@string/consulting"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:text="0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/thumbsUpNumText"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-                        <TextView
-                            android:text="@string/thumbs_up"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:text="0"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/thumbsDownNumText"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-                        <TextView
-                            android:text="@string/thumbs_down"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
+
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
@@ -267,24 +334,6 @@
             android:tint="@color/primary"
             android:src="@drawable/ic_edit_black_48dp"
             app:backgroundTint="@color/white"/>
-
-        <ImageView
-            android:id="@+id/studentImageButton"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/default_profile_big_img"/>
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@drawable/ic_keyboard_arrow_left_black_48dp"
-            android:id="@+id/topBackButton"
-            android:tint="@color/white"
-            android:background="@drawable/ripple_circle_button"
-            android:scaleType="centerInside"
-            android:padding="10dp"
-            android:elevation="2dp"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

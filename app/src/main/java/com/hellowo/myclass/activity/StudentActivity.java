@@ -22,12 +22,17 @@ import com.hellowo.myclass.databinding.ActivityStudentBinding;
 import com.hellowo.myclass.model.Student;
 import com.hellowo.myclass.utils.FileUtil;
 
+import org.eazegraph.lib.charts.BarChart;
+import org.eazegraph.lib.models.BarModel;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
@@ -53,6 +58,18 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     private void initLayout() {
+        BarChart mBarChart = binding.barchart;
+
+        mBarChart.addBar(new BarModel(2.3f, 0xFF123456));
+        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
+        mBarChart.addBar(new BarModel(3.3f, 0xFF563456));
+        mBarChart.addBar(new BarModel(1.1f, 0xFF873F56));
+        mBarChart.addBar(new BarModel(2.7f, 0xFF56B7F1));
+        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
+        mBarChart.addBar(new BarModel(0.4f, 0xFF1FF4AC));
+        mBarChart.addBar(new BarModel(4.f,  0xFF1BA4E6));
+
+        mBarChart.startAnimation();
     }
 
     private void initStudent() {
@@ -129,7 +146,12 @@ public class StudentActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
             Glide.with(this)
                     .load(new File(student.profileImageUri))
+                    .bitmapTransform(new CropCircleTransformation(this))
                     .into(binding.studentImageButton);
+
+            Glide.with(this).load(new File(student.profileImageUri))
+                    .bitmapTransform(new BlurTransformation(this))
+                    .into(binding.classImage);
         }
     }
 
