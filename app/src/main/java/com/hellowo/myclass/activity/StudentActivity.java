@@ -60,14 +60,11 @@ public class StudentActivity extends AppCompatActivity {
     private void initLayout() {
         BarChart mBarChart = binding.barchart;
 
-        mBarChart.addBar(new BarModel(2.3f, 0xFF123456));
-        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
-        mBarChart.addBar(new BarModel(3.3f, 0xFF563456));
-        mBarChart.addBar(new BarModel(1.1f, 0xFF873F56));
-        mBarChart.addBar(new BarModel(2.7f, 0xFF56B7F1));
-        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
-        mBarChart.addBar(new BarModel(0.4f, 0xFF1FF4AC));
-        mBarChart.addBar(new BarModel(4.f,  0xFF1BA4E6));
+        mBarChart.addBar(new BarModel(2.3f, 0xFFFFFFFF));
+        mBarChart.addBar(new BarModel(2.f,  0xFFFFFFFF));
+        mBarChart.addBar(new BarModel(3.3f, 0xFFFFFFFF));
+        mBarChart.addBar(new BarModel(1.1f, 0xFFFFFFFF));
+        mBarChart.addBar(new BarModel(2.7f, 0xFFFFFFFF));
 
         mBarChart.startAnimation();
     }
