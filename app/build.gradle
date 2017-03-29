@@ -25,6 +25,7 @@ android {
 
 repositories {
     maven { url "http://dl.bintray.com/pixplicity/maven" }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {

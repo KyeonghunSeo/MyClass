@@ -67,12 +67,15 @@ public class HomeMyClassActivity extends AppCompatActivity {
 
     private void initClassData() {
         String myClassId = getIntent().getStringExtra(INTENT_KEY_MY_CLASS_ID);
+
         myClass = realm.where(MyClass.class)
                 .equalTo(MyClass.KEY_ID, myClassId)
                 .findFirst();
+
         studentRealmResults = realm.where(Student.class)
                 .equalTo(Student.KEY_MY_CLASS_ID, myClassId)
-                .findAll();
+                .findAllSorted(Student.KEY_NUMBER);
+
         studentRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Student>>() {
             @Override
             public void onChange(RealmResults<Student> element) {
@@ -160,8 +163,11 @@ public class HomeMyClassActivity extends AppCompatActivity {
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(
-                        getBaseContext(), LinearLayoutManager.VERTICAL, false
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(
+                        getBaseContext(),
+                        LinearLayoutManager.VERTICAL,
+                        false
                 )
         );
         recyclerView.setAdapter(new StudentListAdapter(

@@ -21,4 +21,5 @@
     <string name="consulting">상담</string>
     <string name="thumbs_up">칭찬</string>
     <string name="thumbs_down">꾸중</string>
+    <string name="enter_description">메모를 입력하세요</string>
 </resources>

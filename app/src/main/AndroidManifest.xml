@@ -26,6 +26,7 @@
         <activity android:name=".activity.EditMyClassActivity"/>
         <activity android:name=".activity.HomeMyClassActivity"/>
         <activity android:name=".activity.StudentActivity"/>
+        <activity android:name=".activity.EventActivity"/>
 
         <receiver android:name=".receiver.IncomingCallBroadcastReceiver">
             <intent-filter>

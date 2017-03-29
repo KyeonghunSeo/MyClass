@@ -1,6 +1,8 @@
 package com.hellowo.myclass.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -16,10 +18,13 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.hellowo.myclass.AppColor;
 import com.hellowo.myclass.AppFont;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityStudentBinding;
+import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
+import com.hellowo.myclass.utils.ActivityUtil;
 import com.hellowo.myclass.utils.FileUtil;
 
 import org.eazegraph.lib.charts.BarChart;
@@ -34,6 +39,7 @@ import io.realm.Realm;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
 import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
 public class StudentActivity extends AppCompatActivity {
@@ -45,31 +51,38 @@ public class StudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_class);
+        ActivityUtil.setStatusBarOverlay(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_student);
         realm = Realm.getDefaultInstance();
 
         initLayout();
-        initStudent();
+        initData();
         initTitle();
         initPhoneNumber();
         initAddress();
         initBirth();
         initClassImageButton();
+        initEditButton();
+        setStudentImage();
+        setClassImage();
     }
 
     private void initLayout() {
         BarChart mBarChart = binding.barchart;
 
-        mBarChart.addBar(new BarModel(2.3f, 0xFFFFFFFF));
-        mBarChart.addBar(new BarModel(2.f,  0xFFFFFFFF));
-        mBarChart.addBar(new BarModel(3.3f, 0xFFFFFFFF));
-        mBarChart.addBar(new BarModel(1.1f, 0xFFFFFFFF));
-        mBarChart.addBar(new BarModel(2.7f, 0xFFFFFFFF));
+        BarModel model = new BarModel(3f, AppColor.secondaryWhiteText);
+        model.setShowValue(false);
+
+        mBarChart.addBar(model);
+        mBarChart.addBar(new BarModel(2f, AppColor.secondaryWhiteText));
+        mBarChart.addBar(new BarModel(1f, AppColor.secondaryWhiteText));
+        mBarChart.addBar(new BarModel(5f, AppColor.secondaryWhiteText));
+        mBarChart.addBar(new BarModel(7f, AppColor.secondaryWhiteText));
 
         mBarChart.startAnimation();
     }
 
-    private void initStudent() {
+    private void initData() {
         String studentId = getIntent().getStringExtra(INTENT_KEY_STUDENT_ID);
         student = realm.where(Student.class)
                 .equalTo(Student.KEY_ID, studentId)
@@ -135,21 +148,53 @@ public class StudentActivity extends AppCompatActivity {
                         .check();
             }
         });
-
-        setStudentImage();
     }
 
     private void setStudentImage() {
-        if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
+        if(!TextUtils.isEmpty(student.profileImageUri)) { // 이미지 경로가 있으면 로드함
+
             Glide.with(this)
                     .load(new File(student.profileImageUri))
                     .bitmapTransform(new CropCircleTransformation(this))
                     .into(binding.studentImageButton);
 
-            Glide.with(this).load(new File(student.profileImageUri))
+        }else {
+
+            Glide.with(this).load(R.drawable.default_profile_circle)
+                    .bitmapTransform(new CropCircleTransformation(this))
+                    .into(binding.studentImageButton);
+
+        }
+    }
+
+    private void setClassImage() {
+        if(!TextUtils.isEmpty(student.myClass.classImageUri)) { // 이미지 경로가 있으면 로드함
+
+            Glide.with(this).load(new File(student.myClass.classImageUri))
                     .bitmapTransform(new BlurTransformation(this))
                     .into(binding.classImage);
+
+        }else {
+
+            Glide.with(this).load(R.drawable.default_class_img)
+                    .bitmapTransform(new BlurTransformation(this))
+                    .into(binding.classImage);
+
         }
+    }
+
+    private void initEditButton() {
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(StudentActivity.this, EventActivity.class);
+                intent.putExtra(INTENT_KEY_STUDENT_ID, student.studentId);
+                intent.putExtra(INTENT_KEY_MY_CLASS_ID, student.myClass.classId);
+                startActivity(intent);
+
+            }
+        });
     }
 
     @Override

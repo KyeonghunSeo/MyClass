@@ -3,14 +3,22 @@
     <color name="blank">#00000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
-
     <color name="black_alpha">#90000000</color>
+    <color name="gainsboro">#DCDCDC</color>
 
-    <color name="primary">#52616a</color>
-    <color name="primary_dark">#1e2022</color>
-    <color name="accent">#c9d6de</color>
+    <color name="primary">#FF000000</color>
+    <color name="primary_dark">#FF000000</color>
+    <color name="accent">#FF000000</color>
+
+    <color name="primary_text">#de000000</color>
+    <color name="secondary_text">#89000000</color>
+    <color name="disable_text">#60000000</color>
+    <color name="primary_white_text">#FFFFFFFF</color>
+    <color name="secondary_white_text">#b3FFFFFF</color>
+    <color name="disable_white_text">#80FFFFFF</color>
 
     <color name="main_background_dark">#f4f4f4</color>
     <color name="main_background">#FFFFFFFF</color>
-    <color name="pressed">#8052616a</color>
+    <color name="selected">#80000000</color>
+    <color name="pressed">#80000000</color>
 </resources>

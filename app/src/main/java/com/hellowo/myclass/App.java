@@ -23,6 +23,7 @@ public class App extends Application{
         initPrefs();
         AppScreen.init(this);
         AppFont.init(this);
+        AppColor.init(this);
     }
 
     /**
