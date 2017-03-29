@@ -3,16 +3,18 @@ package com.hellowo.myclass.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
+import com.hellowo.myclass.AppDateFormat;
 import com.hellowo.myclass.R;
-import com.hellowo.myclass.databinding.ActivityChooseClassBinding;
 import com.hellowo.myclass.databinding.ActivityEventBinding;
-import com.hellowo.myclass.dialog.ChooseStudentDialog;
+import com.hellowo.myclass.dialog.SelectStudentDialog;
 import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.Student;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +38,9 @@ public class EventActivity extends AppCompatActivity {
 
         initData();
         initEvent();
-        initChooseStudentView();
+        initDate();
+        initType();
+        initStudentChipView();
     }
 
     private void initData() {
@@ -63,9 +67,52 @@ public class EventActivity extends AppCompatActivity {
 
             if(studentId != null) {
 
+                Student student = realm.where(Student.class)
+                        .equalTo(Student.KEY_ID, studentId)
+                        .findFirst();
+
+                Map<String, Student> studentMap = new HashMap<>();
+                studentMap.put(student.studentId, student);
+
+                binding.studentChipView.makeStudentChips(studentMap);
+
             }
 
         }
+    }
+
+    private void initType() {
+        binding.typeText.setText(event.getTypeTitle());
+    }
+
+    private void initDate() {
+        binding.dateText.setText(AppDateFormat.mdeDate.format(new Date(event.dtStart)));
+
+        binding.dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(event.dtStart);
+
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear,
+                                                  int dayOfMonth) {
+                                calendar.set(year, monthOfYear, dayOfMonth);
+                                event.dtStart = calendar.getTimeInMillis();
+                                event.dtEnd = calendar.getTimeInMillis();
+                                binding.dateText.setText(
+                                        AppDateFormat.mdeDate.format(new Date(event.dtStart)));
+                            }
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
+                dpd.setAccentColor(getResources().getColor(R.color.primary));
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+            }
+        });
     }
 
     private void initEvent() {
@@ -78,25 +125,35 @@ public class EventActivity extends AppCompatActivity {
         });
     }
 
-    private void initChooseStudentView() {
-        binding.chooseStudent.setOnClickListener(new View.OnClickListener() {
+    private void initStudentChipView() {
+        setAddStudentButton();
+
+        binding.addStudentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChooseStudentDialog dialog = new ChooseStudentDialog(
+                SelectStudentDialog dialog = new SelectStudentDialog(
                         EventActivity.this,
                         classId,
                         new HashMap<String, Student>(),
-                        new ChooseStudentDialog.ChooseStudentInterface() {
+                        new SelectStudentDialog.ChooseStudentInterface() {
                             @Override
                             public void onSelected(Map<String, Student> selectedMap) {
-                                for(String id : selectedMap.keySet()){
-                                    Log.i("aaa", selectedMap.get(id).name);
-                                }
+                                binding.studentChipView.makeStudentChips(selectedMap);
+                                setAddStudentButton();
+
                             }
                         });
                 dialog.show();
             }
         });
+    }
+
+    private void setAddStudentButton() {
+        if(binding.studentChipView.getChipCount() > 0) {
+            binding.addStudentText.setVisibility(View.GONE);
+        }else{
+            binding.addStudentText.setVisibility(View.VISIBLE);
+        }
     }
 
     private void saveEvent() {

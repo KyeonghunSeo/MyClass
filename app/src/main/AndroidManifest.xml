@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ChooseMyClassActivity"/>
+        <activity android:name=".activity.SelectMyClassActivity"/>
         <activity android:name=".activity.EditMyClassActivity"/>
         <activity android:name=".activity.HomeMyClassActivity"/>
         <activity android:name=".activity.StudentActivity"/>

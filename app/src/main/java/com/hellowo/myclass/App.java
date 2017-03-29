@@ -24,6 +24,7 @@ public class App extends Application{
         AppScreen.init(this);
         AppFont.init(this);
         AppColor.init(this);
+        AppDateFormat.init(this);
     }
 
     /**

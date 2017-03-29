@@ -1,5 +1,8 @@
 package com.hellowo.myclass.model;
 
+import com.hellowo.myclass.App;
+import com.hellowo.myclass.R;
+
 import java.util.UUID;
 
 import io.realm.RealmObject;
@@ -38,5 +41,28 @@ public class Event extends RealmObject {
         event.lastUpdated = System.currentTimeMillis();
         event.eventId = UUID.randomUUID().toString();
         return event;
+    }
+
+    public String getTypeTitle() {
+        switch (type) {
+            case TYPE_ABSENT:
+                return App.baseContext.getString(R.string.absent);
+            case TYPE_SICK:
+                return App.baseContext.getString(R.string.absent_sick);
+            case TYPE_EARLY:
+                return App.baseContext.getString(R.string.absent_early);
+            case TYPE_ANNOUNCEMENT:
+                return App.baseContext.getString(R.string.announcement);
+            case TYPE_CONSULTING:
+                return App.baseContext.getString(R.string.consulting);
+            case TYPE_THUMBS_UP:
+                return App.baseContext.getString(R.string.thumbs_up);
+            case TYPE_THUMBS_DOWN:
+                return App.baseContext.getString(R.string.thumbs_down);
+            case TYPE_NORMAL_EVENT:
+                return App.baseContext.getString(R.string.event);
+            default:
+                return App.baseContext.getString(R.string.app_name);
+        }
     }
 }

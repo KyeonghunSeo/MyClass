@@ -37,7 +37,6 @@
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ripple_button"
                 android:gravity="bottom">
 
                 <TextView
@@ -45,11 +44,12 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primary_text"
+                    android:background="@drawable/ripple_button"
                     android:id="@+id/dateText" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
                     android:layout_marginLeft="5dp"
                     app:srcCompat="@drawable/ic_edit_black_48dp"
                     android:tint="@color/gainsboro" />
@@ -61,7 +61,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/ripple_button"
                 android:gravity="bottom">
 
                 <TextView
@@ -69,22 +68,42 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/primary_text"
+                    android:background="@drawable/ripple_button"
                     android:id="@+id/typeText" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
                     android:layout_marginLeft="5dp"
                     app:srcCompat="@drawable/ic_edit_black_48dp"
                     android:tint="@color/gainsboro" />
 
             </LinearLayout>
 
-            <Button
-                android:layout_marginTop="20dp"
-                android:id="@+id/chooseStudent"
+            <LinearLayout
+                android:id="@+id/addStudentButton"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/ripple_button"
+                android:gravity="bottom">
+
+                <TextView
+                    android:id="@+id/addStudentText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_student"
+                    android:textColor="@color/primary_text"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <com.hellowo.myclass.view.StudentChipView
+                    android:id="@+id/studentChipView"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content">
+                </com.hellowo.myclass.view.StudentChipView>
+
+            </LinearLayout>
 
             <EditText
                 android:layout_width="match_parent"

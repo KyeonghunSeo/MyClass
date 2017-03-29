@@ -3,7 +3,6 @@ package com.hellowo.myclass.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
@@ -31,7 +30,7 @@ import io.realm.RealmResults;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
 
-public class ChooseMyClassActivity extends AppCompatActivity {
+public class SelectMyClassActivity extends AppCompatActivity {
     final static float PAGER_ITEM_DEFAULT_SCALE = 0.1f;
     private ActivityChooseClassBinding binding;
     private Realm realm;
@@ -124,7 +123,7 @@ public class ChooseMyClassActivity extends AppCompatActivity {
             binding.classCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ChooseMyClassActivity.this, HomeMyClassActivity.class);
+                    Intent intent = new Intent(SelectMyClassActivity.this, HomeMyClassActivity.class);
                     intent.putExtra(INTENT_KEY_MY_CLASS_ID, myClass.classId);
                     startActivity(intent);
                     finish();
@@ -133,7 +132,7 @@ public class ChooseMyClassActivity extends AppCompatActivity {
             binding.schoolNameText.setText(myClass.schoolName);
 
             if(!TextUtils.isEmpty(myClass.classImageUri)){ // 이미지 경로가 있으면 로드함
-                Glide.with(ChooseMyClassActivity.this)
+                Glide.with(SelectMyClassActivity.this)
                         .load(new File(myClass.classImageUri))
                         .into(binding.classImage);
             }
@@ -144,7 +143,7 @@ public class ChooseMyClassActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     startActivity(
-                            new Intent(ChooseMyClassActivity.this, EditMyClassActivity.class)
+                            new Intent(SelectMyClassActivity.this, EditMyClassActivity.class)
                     );
                 }
             });

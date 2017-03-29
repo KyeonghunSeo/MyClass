@@ -5,16 +5,12 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.adapter.StudentGridAdapter;
 import com.hellowo.myclass.databinding.DialogChooseStudentBinding;
-import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
 
 import java.util.Map;
@@ -22,7 +18,7 @@ import java.util.Map;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class ChooseStudentDialog extends Dialog {
+public class SelectStudentDialog extends Dialog {
     DialogChooseStudentBinding binding;
     private Realm realm;
     private RealmResults<Student> studentRealmResults;
@@ -30,7 +26,7 @@ public class ChooseStudentDialog extends Dialog {
     private StudentGridAdapter studentGridAdapter;
     private ChooseStudentInterface chooseStudentInterface;
 
-    public ChooseStudentDialog(Context context, String classId, Map<String, Student> selectedMap,
+    public SelectStudentDialog(Context context, String classId, Map<String, Student> selectedMap,
                                ChooseStudentInterface chooseStudentInterface) {
         super(context);
         realm = Realm.getDefaultInstance();
@@ -46,7 +42,7 @@ public class ChooseStudentDialog extends Dialog {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.inflate(
-                LayoutInflater.from(getContext()), R.layout.dialog_choose_student, null, false);
+                LayoutInflater.from(getContext()), R.layout.dialog_select_student, null, false);
         setContentView(binding.getRoot());
 
         binding.recyclerView.setHasFixedSize(true);

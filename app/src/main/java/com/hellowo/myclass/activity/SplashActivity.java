@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
             intent.putExtra(INTENT_KEY_MY_CLASS_ID, classId);
             startActivity(intent);
         }else{
-            Intent intent = new Intent(SplashActivity.this, ChooseMyClassActivity.class);
+            Intent intent = new Intent(SplashActivity.this, SelectMyClassActivity.class);
             startActivity(intent);
         }
         finish();
