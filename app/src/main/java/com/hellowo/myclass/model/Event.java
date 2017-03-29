@@ -5,11 +5,13 @@ import com.hellowo.myclass.R;
 
 import java.util.UUID;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Event extends RealmObject {
     public static final String KEY_ID = "eventId";
+    public static final String KEY_STUDENT_ID = "students.studentId";
 
     public static final int TYPE_ABSENT = 0;
     public static final int TYPE_SICK = 1;
@@ -26,6 +28,7 @@ public class Event extends RealmObject {
 
     public String title;
     public String description;
+    public RealmList<Student> students;
     public int type;
     public long dtStart;
     public long dtEnd;
@@ -34,6 +37,7 @@ public class Event extends RealmObject {
 
     public static Event creatNewEvent() {
         Event event = new Event();
+        event.students = new RealmList<>();
         event.type = TYPE_NORMAL_EVENT;
         event.dtStart = System.currentTimeMillis();
         event.dtEnd = System.currentTimeMillis();

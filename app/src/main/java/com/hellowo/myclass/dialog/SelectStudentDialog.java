@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.adapter.StudentGridAdapter;
-import com.hellowo.myclass.databinding.DialogChooseStudentBinding;
+import com.hellowo.myclass.databinding.DialogSelectStudentBinding;
 import com.hellowo.myclass.model.Student;
 
 import java.util.Map;
@@ -19,22 +19,22 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class SelectStudentDialog extends Dialog {
-    DialogChooseStudentBinding binding;
+    DialogSelectStudentBinding binding;
     private Realm realm;
     private RealmResults<Student> studentRealmResults;
     private Map<String, Student> selectedMap;
     private StudentGridAdapter studentGridAdapter;
-    private ChooseStudentInterface chooseStudentInterface;
+    private SelectStudentInterface selectStudentInterface;
 
     public SelectStudentDialog(Context context, String classId, Map<String, Student> selectedMap,
-                               ChooseStudentInterface chooseStudentInterface) {
+                               SelectStudentInterface selectStudentInterface) {
         super(context);
         realm = Realm.getDefaultInstance();
         studentRealmResults = realm.where(Student.class)
                 .equalTo(Student.KEY_MY_CLASS_ID, classId)
                 .findAllSorted(Student.KEY_NUMBER);
         this.selectedMap = selectedMap;
-        this.chooseStudentInterface = chooseStudentInterface;
+        this.selectStudentInterface = selectStudentInterface;
     }
 
     @Override
@@ -53,8 +53,8 @@ public class SelectStudentDialog extends Dialog {
         binding.okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(chooseStudentInterface != null){
-                    chooseStudentInterface.onSelected(studentGridAdapter.getSelectedMap());
+                if(selectStudentInterface != null){
+                    selectStudentInterface.onSelected(studentGridAdapter.getSelectedMap());
                 }
                 dismiss();
             }
@@ -74,7 +74,7 @@ public class SelectStudentDialog extends Dialog {
         realm.close();
     }
 
-    public interface ChooseStudentInterface{
+    public interface SelectStudentInterface {
         public void onSelected(Map<String, Student> selectedMap);
     }
 }

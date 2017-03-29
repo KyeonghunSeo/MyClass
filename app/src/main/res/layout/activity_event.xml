@@ -10,8 +10,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/app_bar_height"
-            android:background="@color/white"
-            android:padding="10dp">
+            android:background="@color/white">
 
             <ImageButton
                 android:layout_width="50dp"
@@ -21,7 +20,8 @@
                 android:scaleType="centerInside"
                 android:padding="8dp"
                 android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/ic_arrow_back_black_48dp"/>
+                app:srcCompat="@drawable/ic_arrow_back_black_48dp"
+                android:layout_margin="10dp" />
 
         </FrameLayout>
 
@@ -31,7 +31,8 @@
             android:layout_marginTop="@dimen/app_bar_height"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="20dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -46,13 +47,6 @@
                     android:textColor="@color/primary_text"
                     android:background="@drawable/ripple_button"
                     android:id="@+id/dateText" />
-
-                <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginLeft="5dp"
-                    app:srcCompat="@drawable/ic_edit_black_48dp"
-                    android:tint="@color/gainsboro" />
 
             </LinearLayout>
 
@@ -70,13 +64,6 @@
                     android:textColor="@color/primary_text"
                     android:background="@drawable/ripple_button"
                     android:id="@+id/typeText" />
-
-                <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:layout_marginLeft="5dp"
-                    app:srcCompat="@drawable/ic_edit_black_48dp"
-                    android:tint="@color/gainsboro" />
 
             </LinearLayout>
 

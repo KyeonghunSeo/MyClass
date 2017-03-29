@@ -57,6 +57,7 @@ public class SplashActivity extends AppCompatActivity {
                 .setDeniedMessage(getString(R.string.denied_permission))
                 .setPermissions(new String[]{
                         Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.CALL_PHONE,
                         Manifest.permission.SYSTEM_ALERT_WINDOW
                 }).check();
     }

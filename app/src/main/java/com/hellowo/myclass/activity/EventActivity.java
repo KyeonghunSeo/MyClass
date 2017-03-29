@@ -3,11 +3,13 @@ package com.hellowo.myclass.activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.hellowo.myclass.AppDateFormat;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityEventBinding;
+import com.hellowo.myclass.dialog.SelectEventTypeDialog;
 import com.hellowo.myclass.dialog.SelectStudentDialog;
 import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.Student;
@@ -17,6 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import io.realm.Realm;
 
@@ -74,6 +77,8 @@ public class EventActivity extends AppCompatActivity {
                 Map<String, Student> studentMap = new HashMap<>();
                 studentMap.put(student.studentId, student);
 
+                event.students.add(student);
+
                 binding.studentChipView.makeStudentChips(studentMap);
 
             }
@@ -83,6 +88,22 @@ public class EventActivity extends AppCompatActivity {
 
     private void initType() {
         binding.typeText.setText(event.getTypeTitle());
+
+        binding.typeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectEventTypeDialog dialog = new SelectEventTypeDialog(
+                        EventActivity.this,
+                        new SelectEventTypeDialog.SelectEventTypeInterface() {
+                            @Override
+                            public void onSelected(int type) {
+                                event.type = type;
+                                binding.typeText.setText(event.getTypeTitle());
+                            }
+                        });
+                dialog.show();
+            }
+        });
     }
 
     private void initDate() {
@@ -135,12 +156,18 @@ public class EventActivity extends AppCompatActivity {
                         EventActivity.this,
                         classId,
                         new HashMap<String, Student>(),
-                        new SelectStudentDialog.ChooseStudentInterface() {
+                        new SelectStudentDialog.SelectStudentInterface() {
                             @Override
                             public void onSelected(Map<String, Student> selectedMap) {
+                                event.students.clear();
+
+                                for(String id : selectedMap.keySet()) {
+                                    Student student = selectedMap.get(id);
+                                    event.students.add(student);
+                                }
+
                                 binding.studentChipView.makeStudentChips(selectedMap);
                                 setAddStudentButton();
-
                             }
                         });
                 dialog.show();
@@ -157,7 +184,21 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void saveEvent() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                event.description = binding.editText.getText().toString();
+                event.lastUpdated = System.currentTimeMillis();
 
+                realm.copyToRealmOrUpdate(event);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveEvent();
+        super.onBackPressed();
     }
 
     @Override

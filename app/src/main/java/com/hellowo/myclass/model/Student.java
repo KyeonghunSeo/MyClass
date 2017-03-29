@@ -13,7 +13,6 @@ public class Student extends RealmObject {
     public String studentId;
 
     public MyClass myClass;
-    public RealmList<Event> events;
     public String name;
     public String profileImageUri;
     public String address;

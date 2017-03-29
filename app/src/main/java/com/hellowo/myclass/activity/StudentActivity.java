@@ -3,14 +3,17 @@ package com.hellowo.myclass.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +25,7 @@ import com.hellowo.myclass.AppColor;
 import com.hellowo.myclass.AppFont;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityStudentBinding;
+import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
 import com.hellowo.myclass.utils.ActivityUtil;
@@ -36,6 +40,7 @@ import java.util.Date;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -46,6 +51,7 @@ public class StudentActivity extends AppCompatActivity {
     private ActivityStudentBinding binding;
     private Realm realm;
     private Student student;
+    private RealmResults<Event> eventRealmResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +70,9 @@ public class StudentActivity extends AppCompatActivity {
         initClassImageButton();
         initEditButton();
         setStudentImage();
-        setClassImage();
     }
 
     private void initLayout() {
-        BarChart mBarChart = binding.barchart;
-
-        BarModel model = new BarModel(3f, AppColor.secondaryWhiteText);
-        model.setShowValue(false);
-
-        mBarChart.addBar(model);
-        mBarChart.addBar(new BarModel(2f, AppColor.secondaryWhiteText));
-        mBarChart.addBar(new BarModel(1f, AppColor.secondaryWhiteText));
-        mBarChart.addBar(new BarModel(5f, AppColor.secondaryWhiteText));
-        mBarChart.addBar(new BarModel(7f, AppColor.secondaryWhiteText));
-
-        mBarChart.startAnimation();
     }
 
     private void initData() {
@@ -87,6 +80,12 @@ public class StudentActivity extends AppCompatActivity {
         student = realm.where(Student.class)
                 .equalTo(Student.KEY_ID, studentId)
                 .findFirst();
+
+        eventRealmResults = realm.where(Event.class)
+                .equalTo(Event.KEY_STUDENT_ID, studentId)
+                .findAll();
+
+        Log.i("aaa", eventRealmResults.size()+"");
     }
 
     private void initTitle() {
@@ -97,6 +96,22 @@ public class StudentActivity extends AppCompatActivity {
     private void initPhoneNumber() {
         binding.phoneText.setTypeface(AppFont.mainConceptBold);
         binding.phoneText.setText(student.phoneNumber);
+
+        binding.callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!TextUtils.isEmpty(student.phoneNumber)) {
+
+                    if (ActivityCompat.checkSelfPermission(StudentActivity.this,
+                            Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + student.phoneNumber));
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initAddress() {
@@ -163,22 +178,6 @@ public class StudentActivity extends AppCompatActivity {
             Glide.with(this).load(R.drawable.default_profile_circle)
                     .bitmapTransform(new CropCircleTransformation(this))
                     .into(binding.studentImageButton);
-
-        }
-    }
-
-    private void setClassImage() {
-        if(!TextUtils.isEmpty(student.myClass.classImageUri)) { // 이미지 경로가 있으면 로드함
-
-            Glide.with(this).load(new File(student.myClass.classImageUri))
-                    .bitmapTransform(new BlurTransformation(this))
-                    .into(binding.classImage);
-
-        }else {
-
-            Glide.with(this).load(R.drawable.default_class_img)
-                    .bitmapTransform(new BlurTransformation(this))
-                    .into(binding.classImage);
 
         }
     }

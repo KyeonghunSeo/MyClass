@@ -24,4 +24,5 @@
     <string name="enter_description">메모를 입력하세요</string>
     <string name="event">일정</string>
     <string name="add_student">학생 추가하기</string>
+    <string name="call">전화하기</string>
 </resources>
