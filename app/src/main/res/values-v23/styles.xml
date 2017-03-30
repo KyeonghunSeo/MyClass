@@ -7,6 +7,7 @@
         <item name="android:colorAccent">@color/primary</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/main_background</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
     
 </resources>

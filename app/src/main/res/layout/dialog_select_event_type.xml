@@ -118,7 +118,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/accouncementButton"
+            android:id="@+id/announcementButton"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -189,7 +189,7 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/thumsUpButton"
+            android:id="@+id/thumbsUpButton"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

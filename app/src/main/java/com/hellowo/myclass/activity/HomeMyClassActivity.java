@@ -3,28 +3,26 @@ package com.hellowo.myclass.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.hellowo.myclass.AppConst;
+import com.hellowo.myclass.AppDateFormat;
+import com.hellowo.myclass.AppScreen;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.adapter.StudentListAdapter;
 import com.hellowo.myclass.databinding.ActivityHomeClassBinding;
@@ -38,11 +36,13 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import devlight.io.library.ntb.NavigationTabBar;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
 
@@ -84,38 +84,18 @@ public class HomeMyClassActivity extends AppCompatActivity {
     }
 
     private void initToolBarLayout() {
+
+        binding.classNameText.setText(myClass.getClassTitle());
+
+        Date today = new Date();
+        binding.dateText.setText(AppDateFormat.mdeDate.format(today));
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startFilePickerActivity();
             }
         });
-
-        binding.toolbar.setTitle(myClass.getClassTitle());
-        binding.toolbar.setExpandedTitleColor(getResources().getColor(R.color.blank));
-        binding.toolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.primary));
-
-        if(!TextUtils.isEmpty(myClass.classImageUri)) {
-            /*
-            Glide.with(this)
-                    .load(new File(myClass.classImageUri))
-                    .asBitmap()
-                    .into(new BitmapImageViewTarget(binding.classMainImage) {
-                        @Override public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
-                            super.onResourceReady(bitmap, anim);
-                            Palette palette = Palette.from(bitmap).generate();
-                            Palette.Swatch swatch = palette.getLightMutedSwatch();
-                            binding.toolbar.setExpandedTitleColor(swatch.getRgb());
-                            binding.toolbar.setCollapsedTitleTextColor(swatch.getRgb());
-                        }
-                    });
-                    */
-            Glide.with(this)
-                    .load(new File(myClass.classImageUri))
-                    .centerCrop()
-                    .into(binding.classMainImage);
-        }
-
     }
 
     private void initViewPager() {
@@ -146,6 +126,9 @@ public class HomeMyClassActivity extends AppCompatActivity {
                     case 1:
                         view = createCalendarView();
                         break;
+                    case 2:
+                        view = createHomeView();
+                        break;
                     default:
                         view = new View(HomeMyClassActivity.this);
                         break;
@@ -159,16 +142,15 @@ public class HomeMyClassActivity extends AppCompatActivity {
 
     private View createStudentListView() {
         final View view = LayoutInflater.from(
-                getBaseContext()).inflate(R.layout.item_home_myclass_pager, null, false);
-
+                getBaseContext()).inflate(R.layout.item_pager_student_list, null, false);
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(
                 new LinearLayoutManager(
                         getBaseContext(),
                         LinearLayoutManager.VERTICAL,
-                        false
-                )
+                        false)
         );
         recyclerView.setAdapter(new StudentListAdapter(
                 HomeMyClassActivity.this,
@@ -182,6 +164,30 @@ public class HomeMyClassActivity extends AppCompatActivity {
         return view;
     }
 
+    private View createHomeView() {
+        final View view = LayoutInflater.from(
+                getBaseContext()).inflate(R.layout.item_pager_home, null, false);
+        KenBurnsView classImage = (KenBurnsView)view.findViewById(R.id.classImage);
+
+        if(!TextUtils.isEmpty(myClass.classImageUri)) {
+
+            Glide.with(this)
+                    .load(new File(myClass.classImageUri))
+                    .into(classImage);
+
+        }else {
+
+            Glide.with(this)
+                    .load(R.drawable.default_class_img)
+                    .into(classImage);
+
+        }
+
+        classImage.restart();
+
+        return view;
+    }
+
     private void initNavigationTabBar() {
         final NavigationTabBar navigationTabBar = binding.homeNavigationTabBar;
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
@@ -189,35 +195,35 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_face_black_48dp),
                         getResources().getColor(R.color.primary))
-                        .title("Heart")
+                        .title("")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_date_range_black_48dp),
                         getResources().getColor(R.color.primary))
-                        .title("Cup")
+                        .title("")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_home_black_48dp),
                         getResources().getColor(R.color.primary))
-                        .title("Diploma")
+                        .title("")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_equalizer_black_48dp),
                         getResources().getColor(R.color.primary))
-                        .title("Flag")
+                        .title("")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_settings_black_48dp),
                         getResources().getColor(R.color.primary))
-                        .title("Medal")
+                        .title("")
                         .build()
         );
 
@@ -231,9 +237,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
             @Override
             public void onStartTabSelected(final NavigationTabBar.Model model, final int index) {}
             @Override
-            public void onEndTabSelected(final NavigationTabBar.Model model, final int index) {
-                model.hideBadge();
-            }
+            public void onEndTabSelected(final NavigationTabBar.Model model, final int index) {}
         });
 
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -241,7 +245,13 @@ public class HomeMyClassActivity extends AppCompatActivity {
             public void onPageScrolled(final int position, final float positionOffset,
                                        final int positionOffsetPixels) {}
             @Override
-            public void onPageSelected(final int position) {}
+            public void onPageSelected(final int position) {
+                if(position == 2 || position == 3 || position == 4) {
+                    binding.fab.hide();
+                }else{
+                    binding.fab.show();
+                }
+            }
             @Override
             public void onPageScrollStateChanged(final int state) {}
         });

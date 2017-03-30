@@ -30,6 +30,7 @@ public class StudentGridAdapter
         super(data, true);
         this.context = context;
         this.selectedMap = selectedMap;
+        setHasStableIds(true);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

@@ -7,10 +7,13 @@ import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 
 public class Event extends RealmObject {
     public static final String KEY_ID = "eventId";
+    public static final String KEY_DT_START = "dtStart";
+    public static final String KEY_TYPE = "type";
     public static final String KEY_STUDENT_ID = "students.studentId";
 
     public static final int TYPE_ABSENT = 0;
@@ -67,6 +70,29 @@ public class Event extends RealmObject {
                 return App.baseContext.getString(R.string.event);
             default:
                 return App.baseContext.getString(R.string.app_name);
+        }
+    }
+
+    public int getTypeIconId() {
+        switch (type) {
+            case TYPE_ABSENT:
+                return R.drawable.ic_home_black_48dp;
+            case TYPE_SICK:
+                return R.drawable.ic_local_hotel_black_48dp;
+            case TYPE_EARLY:
+                return R.drawable.ic_hourglass_empty_black_48dp;
+            case TYPE_ANNOUNCEMENT:
+                return R.drawable.ic_pan_tool_black_48dp;
+            case TYPE_CONSULTING:
+                return R.drawable.ic_supervisor_account_black_48dp;
+            case TYPE_THUMBS_UP:
+                return R.drawable.ic_thumb_up_black_48dp;
+            case TYPE_THUMBS_DOWN:
+                return R.drawable.ic_thumb_down_black_48dp;
+            case TYPE_NORMAL_EVENT:
+                return R.drawable.ic_date_range_black_48dp;
+            default:
+                return R.drawable.ic_date_range_black_48dp;
         }
     }
 }

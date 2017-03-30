@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.hellowo.myclass.AppDateFormat;
+import com.hellowo.myclass.AppScreen;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.databinding.ActivityEventBinding;
 import com.hellowo.myclass.dialog.SelectEventTypeDialog;
@@ -19,7 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import io.realm.Realm;
 
@@ -43,6 +43,7 @@ public class EventActivity extends AppCompatActivity {
         initEvent();
         initDate();
         initType();
+        initMemo();
         initStudentChipView();
     }
 
@@ -58,9 +59,10 @@ public class EventActivity extends AppCompatActivity {
 
         if(eventId != null) {
 
-            event = realm.where(Event.class)
-                    .equalTo(Event.KEY_ID, eventId)
-                    .findFirst();
+            event = realm.copyFromRealm(
+                    realm.where(Event.class)
+                            .equalTo(Event.KEY_ID, eventId)
+                            .findFirst());
 
         }else {
 
@@ -74,12 +76,7 @@ public class EventActivity extends AppCompatActivity {
                         .equalTo(Student.KEY_ID, studentId)
                         .findFirst();
 
-                Map<String, Student> studentMap = new HashMap<>();
-                studentMap.put(student.studentId, student);
-
                 event.students.add(student);
-
-                binding.studentChipView.makeStudentChips(studentMap);
 
             }
 
@@ -87,9 +84,9 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void initType() {
-        binding.typeText.setText(event.getTypeTitle());
+        setTypeData();
 
-        binding.typeText.setOnClickListener(new View.OnClickListener() {
+        binding.typeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SelectEventTypeDialog dialog = new SelectEventTypeDialog(
@@ -98,7 +95,7 @@ public class EventActivity extends AppCompatActivity {
                             @Override
                             public void onSelected(int type) {
                                 event.type = type;
-                                binding.typeText.setText(event.getTypeTitle());
+                                setTypeData();
                             }
                         });
                 dialog.show();
@@ -136,6 +133,18 @@ public class EventActivity extends AppCompatActivity {
         });
     }
 
+    private void setTypeData() {
+        binding.typeText.setText(event.getTypeTitle());
+        binding.typeImage.setImageResource(event.getTypeIconId());
+    }
+
+    private void initMemo() {
+        if(!TextUtils.isEmpty(event.description)) {
+            binding.editText.setText(event.description);
+            binding.editText.setSelection(event.description.length());
+        }
+    }
+
     private void initEvent() {
         binding.topBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,9 +153,29 @@ public class EventActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        binding.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteEvent();
+                finish();
+            }
+        });
+
+        binding.timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String timeText = AppDateFormat.time.format(new Date());
+                binding.editText.setText(
+                        binding.editText.getText().toString() + timeText
+                );
+                binding.editText.setSelection(binding.editText.getText().toString().length());
+            }
+        });
     }
 
     private void initStudentChipView() {
+        binding.studentChipView.setMaxWidth(AppScreen.dpToPx(250));
         setAddStudentButton();
 
         binding.addStudentButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +195,6 @@ public class EventActivity extends AppCompatActivity {
                                     event.students.add(student);
                                 }
 
-                                binding.studentChipView.makeStudentChips(selectedMap);
                                 setAddStudentButton();
                             }
                         });
@@ -176,7 +204,8 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void setAddStudentButton() {
-        if(binding.studentChipView.getChipCount() > 0) {
+        if(event.students.size() > 0) {
+            binding.studentChipView.makeStudentChips(event.students);
             binding.addStudentText.setVisibility(View.GONE);
         }else{
             binding.addStudentText.setVisibility(View.VISIBLE);
@@ -193,6 +222,23 @@ public class EventActivity extends AppCompatActivity {
                 realm.copyToRealmOrUpdate(event);
             }
         });
+    }
+
+    private void deleteEvent() {
+        final Event deleteEvent = realm.where(Event.class)
+                .equalTo(Event.KEY_ID, event.eventId)
+                .findFirst();
+
+        if(deleteEvent != null) {
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    deleteEvent.deleteFromRealm();
+                }
+            });
+
+        }
     }
 
     @Override

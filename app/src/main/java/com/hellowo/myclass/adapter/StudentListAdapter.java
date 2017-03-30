@@ -3,22 +3,27 @@ package com.hellowo.myclass.adapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.activity.StudentActivity;
 import com.hellowo.myclass.databinding.ItemStudentListBinding;
+import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.Student;
 
 import java.io.File;
 
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
@@ -57,6 +62,11 @@ public class StudentListAdapter
             public void onClick(View view) {
                 Intent intent = new Intent(activity, StudentActivity.class);
                 intent.putExtra(INTENT_KEY_STUDENT_ID, student.studentId);
+                /*
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(activity, view, "studentImage");
+                activity.startActivity(intent, options.toBundle());
+                */
                 activity.startActivity(intent);
             }
         });
@@ -68,13 +78,57 @@ public class StudentListAdapter
             }
         });
 
+        holder.binding.announcementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addEvent(student, Event.TYPE_ANNOUNCEMENT);
+                itemClicked(position);
+            }
+        });
+
+        holder.binding.thumbsUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addEvent(student, Event.TYPE_THUMBS_UP);
+                itemClicked(position);
+            }
+        });
+
+        holder.binding.thumbsDownButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addEvent(student, Event.TYPE_THUMBS_DOWN);
+                itemClicked(position);
+            }
+        });
+
         setStudentImage(holder.binding, student);
+    }
+
+    private void addEvent(final Student student, final int type) {
+        Realm realm = Realm.getDefaultInstance();
+        try {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    Event event = Event.creatNewEvent();
+                    event.type = type;
+                    event.students.add(student);
+                    realm.copyToRealmOrUpdate(event);
+                    Toast.makeText(activity,
+                            student.name + " " + event.getTypeTitle(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } finally {
+            realm.close();
+        }
     }
 
     private void setStudentImage(ItemStudentListBinding binding, Student student) {
         if(!TextUtils.isEmpty(student.profileImageUri)){ // 이미지 경로가 있으면 로드함
             Glide.with(activity)
                     .load(new File(student.profileImageUri))
+                    .bitmapTransform(new CropCircleTransformation(activity))
                     .into(binding.studentImage);
         }else{
             binding.studentImage.setImageResource(R.drawable.default_profile_circle);
@@ -82,11 +136,22 @@ public class StudentListAdapter
     }
 
     private void itemClicked(final int position) {
-        if(currentExpandedItemPosition >= 0){
-            notifyItemChanged(currentExpandedItemPosition);
-        }
+        int prevPosition = currentExpandedItemPosition;
         currentExpandedItemPosition = position;
-        notifyItemChanged(currentExpandedItemPosition);
+
+        if(prevPosition == currentExpandedItemPosition) {
+
+            currentExpandedItemPosition = -1;
+            notifyItemChanged(prevPosition);
+
+        }else {
+
+            if(prevPosition >= 0){
+                notifyItemChanged(prevPosition);
+            }
+            notifyItemChanged(currentExpandedItemPosition);
+
+        }
     }
 
     @Override

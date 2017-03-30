@@ -51,18 +51,27 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/typeButton"
+                android:background="@drawable/ripple_button"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="bottom">
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/typeImage"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:tint="@color/primary"
+                    android:scaleType="centerInside"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/primary_text"
-                    android:background="@drawable/ripple_button"
                     android:id="@+id/typeText" />
 
             </LinearLayout>
@@ -104,6 +113,36 @@
                 android:gravity="top" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:layout_gravity="bottom"
+            android:elevation="10dp">
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/deleteButton"
+                android:background="@drawable/ripple_circle_button"
+                android:scaleType="centerInside"
+                android:padding="10dp"
+                android:layout_gravity="right"
+                app:srcCompat="@drawable/ic_delete_forever_black_48dp" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/timeButton"
+                android:background="@drawable/ripple_circle_button"
+                android:scaleType="centerInside"
+                android:padding="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_gravity="right"
+                app:srcCompat="@drawable/ic_query_builder_black_48dp" />
+
+        </FrameLayout>
 
     </FrameLayout>
 </layout>

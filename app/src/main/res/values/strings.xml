@@ -25,4 +25,7 @@
     <string name="event">일정</string>
     <string name="add_student">학생 추가하기</string>
     <string name="call">전화하기</string>
+    <string name="recentEvent">일정</string>
+    <string name="undond_task">해야할 일</string>
+    <string name="birth_this_month">이 달의 생일</string>
 </resources>

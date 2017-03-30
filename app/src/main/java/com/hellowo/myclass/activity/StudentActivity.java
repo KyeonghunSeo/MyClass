@@ -9,8 +9,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -24,6 +27,8 @@ import com.gun0912.tedpermission.TedPermission;
 import com.hellowo.myclass.AppColor;
 import com.hellowo.myclass.AppFont;
 import com.hellowo.myclass.R;
+import com.hellowo.myclass.adapter.EventListAdapter;
+import com.hellowo.myclass.adapter.StudentListAdapter;
 import com.hellowo.myclass.databinding.ActivityStudentBinding;
 import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.MyClass;
@@ -37,10 +42,14 @@ import org.eazegraph.lib.models.BarModel;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -57,7 +66,6 @@ public class StudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_class);
-        ActivityUtil.setStatusBarOverlay(this);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_student);
         realm = Realm.getDefaultInstance();
 
@@ -69,11 +77,12 @@ public class StudentActivity extends AppCompatActivity {
         initBirth();
         initClassImageButton();
         initEditButton();
-        setStudentImage();
+        initEventRecyclerView();
+        initEventCountText();
+        initEvent();
     }
 
-    private void initLayout() {
-    }
+    private void initLayout() {}
 
     private void initData() {
         String studentId = getIntent().getStringExtra(INTENT_KEY_STUDENT_ID);
@@ -83,18 +92,21 @@ public class StudentActivity extends AppCompatActivity {
 
         eventRealmResults = realm.where(Event.class)
                 .equalTo(Event.KEY_STUDENT_ID, studentId)
-                .findAll();
+                .findAllSorted(Event.KEY_DT_START, Sort.DESCENDING);
 
-        Log.i("aaa", eventRealmResults.size()+"");
+        eventRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Event>>() {
+            @Override
+            public void onChange(RealmResults<Event> element) {
+                initEventCountText();
+            }
+        });
     }
 
     private void initTitle() {
-        binding.topTitleText.setTypeface(AppFont.mainConceptBold);
         binding.topTitleText.setText(student.name);
     }
 
     private void initPhoneNumber() {
-        binding.phoneText.setTypeface(AppFont.mainConceptBold);
         binding.phoneText.setText(student.phoneNumber);
 
         binding.callButton.setOnClickListener(new View.OnClickListener() {
@@ -115,12 +127,24 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     private void initAddress() {
-        binding.addressText.setTypeface(AppFont.mainConceptBold);
         binding.addressText.setText(student.address);
+
+        binding.mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    if(!TextUtils.isEmpty(student.address)) {
+                        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + student.address);
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                }catch (Exception ignore){}
+            }
+        });
     }
 
     private void initBirth() {
-        binding.birthText.setTypeface(AppFont.mainConceptBold);
         binding.birthText.setText(DateFormat.getLongDateFormat(this).format(new Date(student.birth)));
     }
 
@@ -163,6 +187,7 @@ public class StudentActivity extends AppCompatActivity {
                         .check();
             }
         });
+        setStudentImage();
     }
 
     private void setStudentImage() {
@@ -186,12 +211,72 @@ public class StudentActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(StudentActivity.this, EventActivity.class);
                 intent.putExtra(INTENT_KEY_STUDENT_ID, student.studentId);
                 intent.putExtra(INTENT_KEY_MY_CLASS_ID, student.myClass.classId);
                 startActivity(intent);
+            }
+        });
+    }
 
+    private void initEventRecyclerView() {
+        binding.recyclerView.setLayoutManager(
+                new LinearLayoutManager(
+                        getBaseContext(),
+                        LinearLayoutManager.VERTICAL,
+                        false
+                )
+        );
+
+        binding.recyclerView.setAdapter(new EventListAdapter(
+                StudentActivity.this,
+                eventRealmResults,
+                student.myClass.classId)
+        );
+    }
+
+    private void initEventCountText() {
+        long absent_count = eventRealmResults
+                .where()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_ABSENT)
+                .or()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_SICK)
+                .or()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_EARLY)
+                .count();
+
+        long announcement_count = eventRealmResults
+                .where()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_ANNOUNCEMENT)
+                .count();
+
+        long consulting_count = eventRealmResults
+                .where()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_CONSULTING)
+                .count();
+
+        long thumbs_up_count = eventRealmResults
+                .where()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_THUMBS_UP)
+                .count();
+
+        long thumbs_down_count = eventRealmResults
+                .where()
+                .equalTo(Event.KEY_TYPE, Event.TYPE_THUMBS_DOWN)
+                .count();
+
+        binding.absentNumText.setText(String.valueOf(absent_count));
+        binding.announcementNumText.setText(String.valueOf(announcement_count));
+        binding.consultingNumText.setText(String.valueOf(consulting_count));
+        binding.thumbsUpNumText.setText(String.valueOf(thumbs_up_count));
+        binding.thumbsDownNumText.setText(String.valueOf(thumbs_down_count));
+    }
+
+    private void initEvent() {
+        binding.topBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
@@ -199,6 +284,7 @@ public class StudentActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        eventRealmResults.removeAllChangeListeners();
         realm.close();
     }
 }
