@@ -1,56 +1,37 @@
 package com.hellowo.myclass.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.hellowo.myclass.AppColor;
-import com.hellowo.myclass.AppFont;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.adapter.EventListAdapter;
-import com.hellowo.myclass.adapter.StudentListAdapter;
 import com.hellowo.myclass.databinding.ActivityStudentBinding;
 import com.hellowo.myclass.model.Event;
-import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
-import com.hellowo.myclass.utils.ActivityUtil;
 import com.hellowo.myclass.utils.FileUtil;
-
-import org.eazegraph.lib.charts.BarChart;
-import org.eazegraph.lib.models.BarModel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import gun0912.tedbottompicker.TedBottomPicker;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;

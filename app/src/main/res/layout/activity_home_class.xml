@@ -10,31 +10,58 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@android:color/white"
-            android:elevation="3dp">
+            android:background="@color/white"
+            android:elevation="2dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical"
-                android:layout_marginLeft="20dp">
+                android:layout_gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/classNameText"
+                    android:id="@+id/topTitleText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/primary_text"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/dateText"
+                    android:id="@+id/topSubText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/secondary_text"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:visibility="gone"/>
 
             </LinearLayout>
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/prevMonthButton"
+                android:background="@drawable/ripple_circle_button"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:tint="@color/primary"
+                app:srcCompat="@drawable/ic_keyboard_arrow_left_black_48dp"
+                android:layout_margin="10dp"
+                android:visibility="gone"/>
+
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/nextMonthButton"
+                android:background="@drawable/ripple_circle_button"
+                android:scaleType="centerInside"
+                android:padding="8dp"
+                android:layout_gravity="right"
+                android:tint="@color/primary"
+                app:srcCompat="@drawable/ic_keyboard_arrow_right_black_48dp"
+                android:layout_margin="10dp"
+                android:visibility="gone" />
 
         </FrameLayout>
 
@@ -42,7 +69,8 @@
             android:id="@+id/homeViewPager"
             android:layout_marginTop="70dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <devlight.io.library.ntb.NavigationTabBar
             android:id="@+id/homeNavigationTabBar"
@@ -62,9 +90,9 @@
             android:layout_marginBottom="76dp"
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
-            android:tint="@color/primary"
+            android:tint="@color/white"
             android:src="@drawable/ic_edit_black_48dp"
-            app:backgroundTint="@color/white"/>
+            app:backgroundTint="@color/accent"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

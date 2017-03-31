@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:elevation="10dp">
+            android:background="@color/white">
 
             <com.flaviofaria.kenburnsview.KenBurnsView
                 android:id="@+id/classImage"
@@ -63,6 +62,11 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gainsboro"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -72,7 +76,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:elevation="15dp"
                 android:layout_weight="1">
 
                 <FrameLayout
@@ -107,12 +110,16 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/gainsboro"/>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/white"
-                android:elevation="0dp">
+                android:background="@color/white">
 
                 <FrameLayout
                     android:layout_width="match_parent"

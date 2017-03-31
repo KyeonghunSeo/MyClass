@@ -52,7 +52,6 @@ public class SelectMyClassActivity extends AppCompatActivity {
             @Override
             public void onChange(RealmResults<MyClass> element) {
                 for(MyClass myClass : element){
-                    Log.i("aaa", myClass.toString());
                 }
                 binding.classViewPager.getAdapter().notifyDataSetChanged();
             }
@@ -142,9 +141,7 @@ public class SelectMyClassActivity extends AppCompatActivity {
             binding.classCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(
-                            new Intent(SelectMyClassActivity.this, EditMyClassActivity.class)
-                    );
+                    startActivity(new Intent(SelectMyClassActivity.this, EditMyClassActivity.class));
                 }
             });
             binding.schoolNameText.setText("......");

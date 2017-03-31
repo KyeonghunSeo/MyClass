@@ -2,6 +2,7 @@ package com.hellowo.myclass;
 
 public class AppColor {
     public static int primary;
+    public static int accent;
     public static int primaryText;
     public static int secondaryText;
     public static int disableText;
@@ -12,6 +13,7 @@ public class AppColor {
 
     public static void init(App app) {
         primary = app.getResources().getColor(R.color.primary);
+        accent = app.getResources().getColor(R.color.accent);
         primaryText = app.getResources().getColor(R.color.primary_text);
         secondaryText = app.getResources().getColor(R.color.secondary_text);
         disableText = app.getResources().getColor(R.color.disable_text);

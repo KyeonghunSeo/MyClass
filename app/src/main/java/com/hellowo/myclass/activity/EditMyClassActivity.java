@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.gun0912.tedpermission.PermissionListener;
@@ -17,6 +18,7 @@ import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.utils.FileUtil;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
@@ -49,13 +51,18 @@ public class EditMyClassActivity extends AppCompatActivity {
         if(TextUtils.isEmpty(myClassId)){
             myClass = new MyClass();
         }else{
-            myClass = realm.where(MyClass.class)
-                    .equalTo(MyClass.KEY_ID, myClassId)
-                    .findFirst();
+            myClass = realm.copyFromRealm(realm.where(MyClass.class)
+                            .equalTo(MyClass.KEY_ID, myClassId)
+                            .findFirst()
+            );
+            binding.gradeEditText.setText(myClass.grade);
+            binding.classNumberEditText.setText(myClass.classNumber);
+            binding.schoolNameEditText.setText(myClass.schoolName);
         }
     }
 
     private void initClassYearTextButton() {
+        binding.classYearTextButton.setText(String.valueOf(myClass.classYear));
         binding.classYearTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,9 +110,7 @@ public class EditMyClassActivity extends AppCompatActivity {
                     @Override
                     public void onImageSelected(Uri uri) {
                         myClass.classImageUri = FileUtil.getPath(getBaseContext(), uri);
-                        Glide.with(EditMyClassActivity.this)
-                                .load(uri)
-                                .into(binding.classImageButton);
+                        setClassImage();
                     }
                 })
                 .setMaxCount(100)
@@ -114,6 +119,8 @@ public class EditMyClassActivity extends AppCompatActivity {
     }
 
     private void initClassImageButton() {
+        setClassImage();
+
         binding.classImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,6 +132,22 @@ public class EditMyClassActivity extends AppCompatActivity {
                         .check();
             }
         });
+    }
+
+    private void setClassImage() {
+        if(!TextUtils.isEmpty(myClass.classImageUri)) {
+
+            Glide.with(EditMyClassActivity.this)
+                    .load(new File(myClass.classImageUri))
+                    .into(binding.classImageButton);
+
+        }else{
+
+            Glide.with(EditMyClassActivity.this)
+                    .load(R.drawable.default_class_img)
+                    .into(binding.classImageButton);
+
+        }
     }
 
     private void initSaveButton() {
@@ -150,6 +173,8 @@ public class EditMyClassActivity extends AppCompatActivity {
                 myClass.classNumber = binding.classNumberEditText.getText().toString().trim();
                 myClass.lastUpdated = System.currentTimeMillis();
                 realm.copyToRealmOrUpdate(myClass);
+
+                Toast.makeText(EditMyClassActivity.this, R.string.saved, Toast.LENGTH_SHORT).show();
             }
         });
     }

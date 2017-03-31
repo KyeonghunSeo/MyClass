@@ -8,6 +8,8 @@ public class Student extends RealmObject {
     public static final String KEY_ID = "studentId";
     public static final String KEY_NUMBER = "number";
     public static final String KEY_MY_CLASS_ID = "myClass.classId";
+    public static final String KEY_PHONE_NUMBER = "phoneNumber";
+    public static final String KEY_PARENT_PHONE_NUMBER = "parentPhoneNumber";
 
     @PrimaryKey
     public String studentId;

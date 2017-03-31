@@ -12,8 +12,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.hellowo.myclass.R;
+import com.hellowo.myclass.model.Event;
+import com.hellowo.myclass.model.Student;
+
+import java.io.File;
+
+import io.realm.Realm;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class CallingService extends Service {
 
@@ -103,12 +112,46 @@ public class CallingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try{ //다른 앱 위에 그릴수 있는 권한이 필요함
-            windowManager.addView(rootView, params);
-            setExtra(intent);
 
-            if (!TextUtils.isEmpty(call_number)) {
-                callNumberText.setText(call_number);
+            if (!TextUtils.isEmpty(call_number)) { // 전화번호가 있을때
+
+                Realm realm = Realm.getDefaultInstance();
+                try {
+                    Student student = realm.where(Student.class)
+                            .equalTo(Student.KEY_PHONE_NUMBER, call_number)
+                            .or()
+                            .equalTo(Student.KEY_PARENT_PHONE_NUMBER, call_number)
+                            .findFirst();
+
+                    if(student != null) {
+
+                        windowManager.addView(rootView, params);
+                        setExtra(intent);
+
+                        nameText.setText(student.name);
+
+                        if(!TextUtils.isEmpty(student.profileImageUri)) { // 이미지 경로가 있으면 로드함
+
+                            Glide.with(this)
+                                    .load(new File(student.profileImageUri))
+                                    .into(studentImage);
+
+                        }
+
+                        if(call_number.equals(student.phoneNumber)) {
+                            callNumberText.setText(R.string.student_phone_number);
+                        }else{
+                            callNumberText.setText(R.string.parent_phone_number);
+                        }
+
+                    }
+
+                } finally {
+                    realm.close();
+                }
+
             }
+
         }catch (Exception ignore){}
 
         return START_REDELIVER_INTENT;

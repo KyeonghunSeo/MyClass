@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -22,25 +23,19 @@ import com.hellowo.myclass.utils.ViewUtil;
 
 import java.util.Calendar;
 
-public class CalendarView extends NestedScrollView {
+public class CalendarView extends FrameLayout {
     private final static long showingAnimationDuation = 250;
     private final static int columns = 7;
-    private final static int dateTextSize = 12;
-    private final static int lineSize = 1;
-    private final static int dateTextViewSize = AppScreen.dpToPx(17);
-    private final static int dateTextViewMargin = AppScreen.dpToPx(2);
+    private final static int rows = 6;
+    private final static int dateTextSize = 16;
+    private final static int lineSize = 0;
+    private final static int dateTextViewMargin = AppScreen.dpToPx(4);
     private final static int verticalLineSize = AppScreen.dpToPx(0);
-    private final static int todayAnimationDelay = 300;
-    private final static int todayAnimDuration = 650;
-    private final static int autoScrollMessage = 0;
-    private final static int autoScrollDelay = 500;
-    public final static Calendar weekSelectedCal = Calendar.getInstance();
     private Context context;
     private Calendar todayCal;
     private Calendar currentCal;
     private Calendar startCal;
     private Calendar endCal;
-    private FrameLayout frameLy;
     private FrameLayout timeBlockLy;
     private LinearLayout calLy;
     private LinearLayout coverLy;
@@ -51,35 +46,31 @@ public class CalendarView extends NestedScrollView {
     private LinearLayout[] coverCellLys;
     private LinearLayout[] horizontalLineLys;
     private LinearLayout[] verticalLineLys;
-    private int rows;
     private int startPos;
     private int lastDate;
     private int weekpos;
     private int todayPos = -1;
+    private CalendarInterface calendarInterface;
 
-    public CalendarView(Context context, Calendar calendar) {
+    public CalendarView(Context context) {
         super(context);
-        init(context, calendar);
-        ViewUtil.runCallbackAfterViewDrawed(this, new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
-    /**
-     * 뷰 초기화
-     */
-    private void init(Context context, Calendar calendar) {
+    public CalendarView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public void init(Context context, Calendar calendar) {
         setVerticalScrollBarEnabled(false);
         this.context = context;
         this.currentCal = calendar;
         todayCal = Calendar.getInstance();
         startCal = Calendar.getInstance();
         endCal = Calendar.getInstance();
-        setCalendarData();
-        frameLy = new FrameLayout(context);
         timeBlockLy = new FrameLayout(context);
         calLy = new LinearLayout(context);
         coverLy = new LinearLayout(context);
@@ -90,19 +81,28 @@ public class CalendarView extends NestedScrollView {
         dateTexts = new TextView[rows * columns];
         horizontalLineLys = new LinearLayout[rows];
         verticalLineLys = new LinearLayout[rows * columns];
-        frameLy.addView(calLy);
-        frameLy.addView(timeBlockLy);
-        frameLy.addView(coverLy);
-        addView(frameLy);
+        addView(calLy);
+        addView(timeBlockLy);
+        addView(coverLy);
+
         createViewItem();
         setLayoutParams();
         setLineParam();
+
+        ViewUtil.runCallbackAfterViewDrawed(this, new Runnable() {
+            @Override
+            public void run() {
+                drawCalendar();
+            }
+        });
+    }
+
+    private void drawCalendar() {
+        timeBlockLy.removeAllViews();
+        setCalendarData();
         drawMonthCalendarDate();
     }
 
-    /**
-     * 날짜 설정
-     */
     private void setCalendarData(){
         setRows();
         setStartPos();
@@ -116,17 +116,37 @@ public class CalendarView extends NestedScrollView {
         CalendarUtil.setCalendarTime23(endCal);
     }
 
-    /**
-     * 행 구함
-     */
     private void setRows() {
         currentCal.set(Calendar.DATE, 1);
-        rows = currentCal.getActualMaximum(Calendar.WEEK_OF_MONTH);
         lastDate = currentCal.getActualMaximum(Calendar.DATE);
+        int currentRows = getCurrentRows();
+
+        if(currentRows == 4) {
+            lineLys[4].setVisibility(GONE);
+            coverLineLys[4].setVisibility(GONE);
+            horizontalLineLys[4].setVisibility(GONE);
+            lineLys[5].setVisibility(GONE);
+            coverLineLys[5].setVisibility(GONE);
+            horizontalLineLys[5].setVisibility(GONE);
+        }else if(currentRows == 5) {
+            lineLys[4].setVisibility(VISIBLE);
+            coverLineLys[4].setVisibility(VISIBLE);
+            horizontalLineLys[4].setVisibility(VISIBLE);
+            lineLys[5].setVisibility(GONE);
+            coverLineLys[5].setVisibility(GONE);
+            horizontalLineLys[5].setVisibility(GONE);
+        }else{
+            lineLys[4].setVisibility(VISIBLE);
+            coverLineLys[4].setVisibility(VISIBLE);
+            horizontalLineLys[4].setVisibility(VISIBLE);
+            lineLys[5].setVisibility(VISIBLE);
+            coverLineLys[5].setVisibility(VISIBLE);
+            horizontalLineLys[5].setVisibility(VISIBLE);
+        }
     }
 
     /**
-     * 스타팅 포지션 구함
+     * 해당 달이 시작되는 1일의 포지션 구함
      */
     private void setStartPos(){
         startPos = currentCal.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY;
@@ -135,9 +155,6 @@ public class CalendarView extends NestedScrollView {
         }
     }
 
-    /**
-     * 주말 포지션 구함
-     */
     private void setWeekPos() {
         weekpos = 0;
     }
@@ -173,25 +190,22 @@ public class CalendarView extends NestedScrollView {
     }
 
     public void setLayoutParams() {
-        frameLy.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        frameLy.setBackgroundColor(Color.WHITE);
+        setBackgroundColor(Color.WHITE);
         timeBlockLy.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        frameLy.setBackgroundColor(Color.WHITE);
         calLy.setOrientation(LinearLayout.VERTICAL);
         calLy.setLayoutParams(new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                AppScreen.dpToPx(500))
+                ViewGroup.LayoutParams.MATCH_PARENT)
         );
         coverLy.setOrientation(LinearLayout.VERTICAL);
         coverLy.setLayoutParams(new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                AppScreen.dpToPx(500))
+                ViewGroup.LayoutParams.MATCH_PARENT)
         );
 
         LinearLayout.LayoutParams dateTextLp = new LinearLayout.LayoutParams(
-                dateTextViewSize, dateTextViewSize);
+                ViewGroup.LayoutParams.WRAP_CONTENT,  ViewGroup.LayoutParams.WRAP_CONTENT);
         dateTextLp.setMargins(0, dateTextViewMargin, 0, 0);
 
         for (int i = 0; i < rows * 2; i++) {
@@ -227,6 +241,8 @@ public class CalendarView extends NestedScrollView {
 
                 dateTexts[cellnum].setLayoutParams(dateTextLp);
                 dateTexts[cellnum].setTextSize(TypedValue.COMPLEX_UNIT_DIP, dateTextSize);
+                dateTexts[cellnum].setPadding(AppScreen.dpToPx(3), AppScreen.dpToPx(3),
+                        AppScreen.dpToPx(3), AppScreen.dpToPx(3));
                 dateTexts[cellnum].setIncludeFontPadding(false);
                 dateTexts[cellnum].setGravity(Gravity.CENTER);
                 dateTexts[cellnum].setTypeface(AppFont.mainConceptBold);
@@ -281,7 +297,9 @@ public class CalendarView extends NestedScrollView {
         if(isLongClick){
 
         }else{
-
+            if(calendarInterface != null) {
+                calendarInterface.onClicked(clickedCal);
+            }
         }
     }
 
@@ -296,33 +314,16 @@ public class CalendarView extends NestedScrollView {
         for (int i = 0; i < rows * columns; i++) {
             is_today = CalendarUtil.isSameDay(targetCal, todayCal);
             if (i < startPos) {
-                dateTexts[i].setText("" + targetCal.get(Calendar.DATE));
+                dateTexts[i].setText(String.valueOf(targetCal.get(Calendar.DATE)));
                 setDateText(dateTexts[i], i, targetCal, true, is_today, false);
             } else if (i >= startPos && i < startPos + lastDate) {
-                dateTexts[i].setText("" + (1 + i - startPos));
+                dateTexts[i].setText(String.valueOf(1 + i - startPos));
                 setDateText(dateTexts[i], i, targetCal, false, is_today, false);
             } else {
-                dateTexts[i].setText("" + (1 + next_month_date));
+                dateTexts[i].setText(String.valueOf(1 + next_month_date));
                 next_month_date++;
                 setDateText(dateTexts[i], i, targetCal, true, is_today, false);
             }
-            targetCal.add(Calendar.DATE, 1);
-        }
-    }
-
-    /**
-     * 주간 달력 날짜에 맞도록 달력을 그리고 날짜 등을 채워 넣음
-     */
-    public void drawWeekCalendarDate() {
-        boolean is_today;
-        boolean is_selected;
-        Calendar targetCal = (Calendar) currentCal.clone();
-        targetCal.add(Calendar.DATE, -startPos);
-        for (int i = 0; i < columns; i++) {
-            is_today = CalendarUtil.isSameDay(targetCal, todayCal);
-            is_selected = CalendarUtil.isSameDay(targetCal, weekSelectedCal);
-            dateTexts[i].setText("" + targetCal.get(Calendar.DATE));
-            setDateText(dateTexts[i], i, targetCal, false, is_today, is_selected);
             targetCal.add(Calendar.DATE, 1);
         }
     }
@@ -335,110 +336,25 @@ public class CalendarView extends NestedScrollView {
         if(is_today){
             todayPos = pos;
         }
-        /*
-        if(cal.compareTo(todayCal) < 0) {
-            alpha = true;
-        }
-        */
-        if(weekpos == pos % columns){
-            textview.setTextColor(context.getResources().getColor(R.color.black));
+
+        if(is_today) {
+            textview.setBackgroundResource(R.drawable.fill_circle_primary);
+            textview.setTextColor(context.getResources().getColor(R.color.white));
         }else{
-            textview.setTextColor(context.getResources().getColor(R.color.primary));
-        }
-    }
-
-    /**
-     * 투데이 애니메이션 재생
-     */
-    public void animateToday(){
-        if(todayPos >= 0 && todayPos < rows * columns){
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    int scrollY = 0;
-                    for(int i = 0 ; i < todayPos / columns ; i++){
-                        scrollY += cellLys[i * columns].getHeight();
-                    }
-                    smoothScrollTo(0, scrollY);
-                    ObjectAnimator.ofFloat(dateTexts[todayPos], "rotationY", 0f, 360f)
-                            .setDuration(todayAnimDuration).start();
-                }
-            }, todayAnimationDelay);
-        }
-    }
-
-    /*
-    public void showTimeBlocks(BlockShowMode mode) {
-        timeBlockLy.removeAllViews();
-        expandRows();
-        addTimeBlocks(mode);
-        isTimeBlockShowed = true;
-        if(readyTodayAnimation){
-            animateToday();
-        }
-    }
-
-    private void expandRows() {
-        int[] cellHeight = currentCanvas.getCellHeight();
-        int total_height = 0;
-        for(int i = 0 ; i < cellHeight.length ; i++){
-            lineLys[i].setLayoutParams(
-                    new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            cellHeight[i]));
-            coverLineLys[i].setLayoutParams(
-                    new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            cellHeight[i] + lineSize));
-            total_height += (cellHeight[i] + lineSize);
-        }
-        calLy.setLayoutParams(
-                new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, total_height));
-        coverLy.setLayoutParams(
-                new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, total_height));
-    }
-
-    private void addTimeBlocks(BlockShowMode mode) {
-        List<TimeBlock> timeBlocks = currentCanvas.getTimeBlocks();
-        if(timeBlocks != null && timeBlocks.size() > 0){
-            if(mode == BlockShowMode.FirstShowing){ // 처음 보여줄때는 모든 블럭에 딜레이 애니메이션
-                long delay_offset = 0;
-                for(TimeBlock block : timeBlocks){
-                    if(block.timeBlockViews != null){
-                        for(TimeBlockView view : block.timeBlockViews){
-                            view.setAlpha(0f);
-                            view.setScaleX(0f);
-                            view.setScaleY(0f);
-                            timeBlockLy.addView(view);
-                            setAppearBlockAnimation(250 + (25 * delay_offset), view);
-                            delay_offset++;
-                        }
-                    }
-                }
-            }else if(mode == BlockShowMode.HightLightLastAction){
-                boolean isTargeted;
-                TimeBlock lastEditBlock = tbm.getLastChangedBlock();
-                for(TimeBlock block : timeBlocks){
-                    isTargeted = false;
-                    if(lastEditBlock != null && block.getId() == lastEditBlock.getId()){
-                        lastEditBlock = block;
-                        isTargeted = true;
-                    }
-                    if(block.timeBlockViews != null){
-                        for(TimeBlockView view : block.timeBlockViews){
-                            timeBlockLy.addView(view);
-                            if(isTargeted){
-                                view.setAlpha(0f);
-                                view.setScaleX(0f);
-                                view.setScaleY(0f);
-                                setHighlightBlockAnimation(view);
-                            }
-                        }
-                    }
-                }
+            textview.setBackgroundResource(R.color.blank);
+            if(weekpos == pos % columns){
+                textview.setTextColor(context.getResources().getColor(R.color.accent));
+            }else{
+                textview.setTextColor(context.getResources().getColor(R.color.primary_text));
             }
         }
-    }*/
+
+        if(alpha) {
+            textview.setAlpha(0.3f);
+        }else{
+            textview.setAlpha(1f);
+        }
+    }
 
     /**
      * 블럭 나타나는 애니메이션 설정
@@ -480,10 +396,6 @@ public class CalendarView extends NestedScrollView {
                 '}';
     }
 
-    public Calendar getCurrentCal() {
-        return currentCal;
-    }
-
     public Calendar getStartCal() {
         return startCal;
     }
@@ -496,8 +408,8 @@ public class CalendarView extends NestedScrollView {
         return todayCal;
     }
 
-    public int getRows() {
-        return rows;
+    public int getCurrentRows() {
+        return currentCal.getActualMaximum(Calendar.WEEK_OF_MONTH);
     }
 
     public int getColumns() {
@@ -506,5 +418,23 @@ public class CalendarView extends NestedScrollView {
 
     public LinearLayout[] getCellLys() {
         return cellLys;
+    }
+
+    public void setCalendarInterface(CalendarInterface calendarInterface) {
+        this.calendarInterface = calendarInterface;
+    }
+
+    public void prevMonth() {
+        currentCal.add(Calendar.MONTH, -1);
+        drawCalendar();
+    }
+
+    public void nextMonth() {
+        currentCal.add(Calendar.MONTH, 1);
+        drawCalendar();
+    }
+
+    public interface CalendarInterface{
+        public void onClicked(Calendar clickedCal);
     }
 }

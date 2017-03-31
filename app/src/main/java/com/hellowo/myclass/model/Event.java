@@ -7,12 +7,12 @@ import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.RealmQuery;
 import io.realm.annotations.PrimaryKey;
 
 public class Event extends RealmObject {
     public static final String KEY_ID = "eventId";
     public static final String KEY_DT_START = "dtStart";
+    public static final String KEY_DT_END = "dtEnd";
     public static final String KEY_TYPE = "type";
     public static final String KEY_STUDENT_ID = "students.studentId";
 
@@ -23,8 +23,9 @@ public class Event extends RealmObject {
     public static final int TYPE_CONSULTING = 4;
     public static final int TYPE_THUMBS_UP = 5;
     public static final int TYPE_THUMBS_DOWN = 6;
-    public static final int TYPE_NORMAL_EVENT = 7;
-    public static final int TYPE_LONG_TERM_EVENT = 8;
+    public static final int TYPE_EVENT = 7;
+    public static final int TYPE_TODO = 8;
+    public static final int TYPE_LONG_TERM_EVENT = 9;
 
     @PrimaryKey
     public String eventId;
@@ -41,7 +42,7 @@ public class Event extends RealmObject {
     public static Event creatNewEvent() {
         Event event = new Event();
         event.students = new RealmList<>();
-        event.type = TYPE_NORMAL_EVENT;
+        event.type = TYPE_EVENT;
         event.dtStart = System.currentTimeMillis();
         event.dtEnd = System.currentTimeMillis();
         event.dtDone = 0;
@@ -66,7 +67,9 @@ public class Event extends RealmObject {
                 return App.baseContext.getString(R.string.thumbs_up);
             case TYPE_THUMBS_DOWN:
                 return App.baseContext.getString(R.string.thumbs_down);
-            case TYPE_NORMAL_EVENT:
+            case TYPE_EVENT:
+                return App.baseContext.getString(R.string.event);
+            case TYPE_TODO:
                 return App.baseContext.getString(R.string.event);
             default:
                 return App.baseContext.getString(R.string.app_name);
@@ -89,7 +92,7 @@ public class Event extends RealmObject {
                 return R.drawable.ic_thumb_up_black_48dp;
             case TYPE_THUMBS_DOWN:
                 return R.drawable.ic_thumb_down_black_48dp;
-            case TYPE_NORMAL_EVENT:
+            case TYPE_EVENT:
                 return R.drawable.ic_date_range_black_48dp;
             default:
                 return R.drawable.ic_date_range_black_48dp;

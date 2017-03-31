@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hellowo.myclass.AppDateFormat;
 import com.hellowo.myclass.AppScreen;
@@ -220,6 +221,8 @@ public class EventActivity extends AppCompatActivity {
                 event.lastUpdated = System.currentTimeMillis();
 
                 realm.copyToRealmOrUpdate(event);
+
+                Toast.makeText(EventActivity.this, R.string.saved, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -235,6 +238,7 @@ public class EventActivity extends AppCompatActivity {
                 @Override
                 public void execute(Realm realm) {
                     deleteEvent.deleteFromRealm();
+                    Toast.makeText(EventActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
                 }
             });
 

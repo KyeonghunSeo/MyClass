@@ -4,11 +4,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="black_alpha">#90000000</color>
+    <color name="white_alpha">#D9FFFFFF</color>
     <color name="gainsboro">#DCDCDC</color>
 
-    <color name="primary">#FF000000</color>
-    <color name="primary_dark">#FF000000</color>
-    <color name="accent">#FF000000</color>
+    <color name="primary">#3B3738</color>
+    <color name="primary_dark">#191919</color>
+    <color name="accent">#C63D0F</color>
 
     <color name="primary_text">#de000000</color>
     <color name="secondary_text">#89000000</color>
