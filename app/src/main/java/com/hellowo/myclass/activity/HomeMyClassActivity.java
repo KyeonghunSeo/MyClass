@@ -55,6 +55,7 @@ import io.realm.Sort;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
+import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
 public class HomeMyClassActivity extends AppCompatActivity {
     public final static int FILE_CODE = 8250;
@@ -62,6 +63,9 @@ public class HomeMyClassActivity extends AppCompatActivity {
     private Realm realm;
     private MyClass myClass;
     private RealmResults<Student> studentRealmResults;
+    private RealmResults<Event> calendarEventRealmResults;
+    private RealmResults<Event> HomeEventRealmResults;
+    private RealmResults<Event> HomeTodoRealmResults;
     private Calendar calendar = Calendar.getInstance();
     private KenBurnsView classImage;
 
@@ -74,6 +78,24 @@ public class HomeMyClassActivity extends AppCompatActivity {
         initClassData();
         initViewPager();
         initNavigationTabBar();
+        initFabEvent();
+    }
+
+    private void initFabEvent() {
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(binding.homeNavigationTabBar.getModelIndex() == 0) {
+                    Intent intent = new Intent(HomeMyClassActivity.this, EventActivity.class);
+                    intent.putExtra(INTENT_KEY_MY_CLASS_ID, myClass.classId);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(HomeMyClassActivity.this, EventActivity.class);
+                    intent.putExtra(INTENT_KEY_MY_CLASS_ID, myClass.classId);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initClassData() {
@@ -178,7 +200,6 @@ public class HomeMyClassActivity extends AppCompatActivity {
         final CalendarView calendarView = (CalendarView)view.findViewById(R.id.calendarView);
         final Calendar calendar = Calendar.getInstance();
 
-        calendarView.init(this, calendar);
         calendarView.setCalendarInterface(new CalendarView.CalendarInterface() {
             @Override
             public void onClicked(Calendar clickedCal) {
@@ -202,6 +223,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
 
             }
         });
+        calendarView.init(this, calendar, realm);
 
         binding.prevMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override

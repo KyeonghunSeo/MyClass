@@ -12,22 +12,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hellowo.myclass.AppColor;
+import com.hellowo.myclass.AppConst;
 import com.hellowo.myclass.AppFont;
 import com.hellowo.myclass.AppScreen;
 import com.hellowo.myclass.R;
+import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.utils.CalendarUtil;
 import com.hellowo.myclass.utils.ViewUtil;
 
 import java.util.Calendar;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+import io.realm.Sort;
+
 public class CalendarView extends FrameLayout {
     private final static long showingAnimationDuation = 250;
     private final static int columns = 7;
     private final static int rows = 6;
-    private final static int dateTextSize = 16;
+    private final static int dateTextSize = 15;
     private final static int lineSize = 0;
     private final static int dateTextViewMargin = AppScreen.dpToPx(4);
     private final static int verticalLineSize = AppScreen.dpToPx(0);
@@ -46,11 +54,14 @@ public class CalendarView extends FrameLayout {
     private LinearLayout[] coverCellLys;
     private LinearLayout[] horizontalLineLys;
     private LinearLayout[] verticalLineLys;
+    private LinearLayout[] eventIndicatorLys;
     private int startPos;
     private int lastDate;
     private int weekpos;
     private int todayPos = -1;
+    private int selectedPos = -1;
     private CalendarInterface calendarInterface;
+    private Realm realm;
 
     public CalendarView(Context context) {
         super(context);
@@ -64,10 +75,11 @@ public class CalendarView extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public void init(Context context, Calendar calendar) {
+    public void init(Context context, Calendar calendar, Realm realm) {
         setVerticalScrollBarEnabled(false);
         this.context = context;
         this.currentCal = calendar;
+        this.realm = realm;
         todayCal = Calendar.getInstance();
         startCal = Calendar.getInstance();
         endCal = Calendar.getInstance();
@@ -81,6 +93,7 @@ public class CalendarView extends FrameLayout {
         dateTexts = new TextView[rows * columns];
         horizontalLineLys = new LinearLayout[rows];
         verticalLineLys = new LinearLayout[rows * columns];
+        eventIndicatorLys = new LinearLayout[rows * columns];
         addView(calLy);
         addView(timeBlockLy);
         addView(coverLy);
@@ -93,6 +106,7 @@ public class CalendarView extends FrameLayout {
             @Override
             public void run() {
                 drawCalendar();
+                onDateClick(todayPos, false);
             }
         });
     }
@@ -101,12 +115,53 @@ public class CalendarView extends FrameLayout {
         timeBlockLy.removeAllViews();
         setCalendarData();
         drawMonthCalendarDate();
+        drawIndicator();
     }
+
+    private void drawIndicator() {
+        for(int i = 0; i < eventIndicatorLys.length; i++) {
+            eventIndicatorLys[i].getChildAt(0).setVisibility(GONE);
+            eventIndicatorLys[i].getChildAt(1).setVisibility(GONE);
+            eventIndicatorLys[i].getChildAt(2).setVisibility(GONE);
+        }
+
+        final long startTime = startCal.getTimeInMillis();
+        final long endTime = endCal.getTimeInMillis();
+
+        RealmResults<Event> eventRealmResults = realm.where(Event.class)
+                .greaterThanOrEqualTo(Event.KEY_DT_END, startTime)
+                .lessThanOrEqualTo(Event.KEY_DT_START, endTime)
+                .findAllSorted(Event.KEY_DT_START, Sort.DESCENDING);
+
+        for(Event event : eventRealmResults) {
+
+            long eventStartTime = event.dtStart;
+            long eventEndTime = event.dtEnd;
+
+            int startCellNum = (int)((eventStartTime - startTime) / AppConst.DAY_MILL_SEC);
+            int endCellNum = (int)((eventEndTime - startTime) / AppConst.DAY_MILL_SEC);
+
+            for(int i = startCellNum; i <= endCellNum; i++) {
+
+                if(event.type == Event.TYPE_EVENT) {
+                    eventIndicatorLys[i].getChildAt(1).setVisibility(VISIBLE);
+                }else if(event.type == Event.TYPE_TODO) {
+                    eventIndicatorLys[i].getChildAt(2).setVisibility(VISIBLE);
+                }else {
+                    eventIndicatorLys[i].getChildAt(0).setVisibility(VISIBLE);
+                }
+
+            }
+        }
+    }
+
+
 
     private void setCalendarData(){
         setRows();
         setStartPos();
         setWeekPos();
+
         startCal.setTimeInMillis(currentCal.getTimeInMillis());
         startCal.add(Calendar.DATE, -startPos);
         endCal.setTimeInMillis(startCal.getTimeInMillis());
@@ -122,26 +177,32 @@ public class CalendarView extends FrameLayout {
         int currentRows = getCurrentRows();
 
         if(currentRows == 4) {
+
             lineLys[4].setVisibility(GONE);
             coverLineLys[4].setVisibility(GONE);
             horizontalLineLys[4].setVisibility(GONE);
             lineLys[5].setVisibility(GONE);
             coverLineLys[5].setVisibility(GONE);
             horizontalLineLys[5].setVisibility(GONE);
+
         }else if(currentRows == 5) {
+
             lineLys[4].setVisibility(VISIBLE);
             coverLineLys[4].setVisibility(VISIBLE);
             horizontalLineLys[4].setVisibility(VISIBLE);
             lineLys[5].setVisibility(GONE);
             coverLineLys[5].setVisibility(GONE);
             horizontalLineLys[5].setVisibility(GONE);
+
         }else{
+
             lineLys[4].setVisibility(VISIBLE);
             coverLineLys[4].setVisibility(VISIBLE);
             horizontalLineLys[4].setVisibility(VISIBLE);
             lineLys[5].setVisibility(VISIBLE);
             coverLineLys[5].setVisibility(VISIBLE);
             horizontalLineLys[5].setVisibility(VISIBLE);
+
         }
     }
 
@@ -171,9 +232,15 @@ public class CalendarView extends FrameLayout {
                     if (j % 2 == 0) {
                         int pos = ((i / 2) * columns) + (j / 2);
                         cellLys[pos] = new LinearLayout(context);
-                        dateTexts[pos] = new TextView(context);
+
                         lineLys[i / 2].addView(cellLys[pos]);
+
+                        dateTexts[pos] = new TextView(context);
+                        eventIndicatorLys[pos] = new LinearLayout(context);
+
                         cellLys[pos].addView(dateTexts[pos]);
+                        cellLys[pos].addView(eventIndicatorLys[pos]);
+
                         coverCellLys[pos] = new LinearLayout(context);
                         coverLineLys[i / 2].addView(coverCellLys[pos]);
                     } else {
@@ -205,8 +272,16 @@ public class CalendarView extends FrameLayout {
         );
 
         LinearLayout.LayoutParams dateTextLp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,  ViewGroup.LayoutParams.WRAP_CONTENT);
+                AppScreen.dpToPx(20), AppScreen.dpToPx(20));
         dateTextLp.setMargins(0, dateTextViewMargin, 0, 0);
+
+        LinearLayout.LayoutParams indiLayoutLp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        indiLayoutLp.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        indiLayoutLp.setMargins(0, AppScreen.dpToPx(3), 0, 0);
+
+        LinearLayout.LayoutParams indiLp = new LinearLayout.LayoutParams(
+                AppScreen.dpToPx(7), AppScreen.dpToPx(7));
 
         for (int i = 0; i < rows * 2; i++) {
             lineLys[i / 2].setOrientation(LinearLayout.HORIZONTAL);
@@ -215,37 +290,60 @@ public class CalendarView extends FrameLayout {
             coverLineLys[i / 2].setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
 
             for (int j = 0; j < columns; j++) {
-                final int cellnum = ((i / 2) * columns) + j;
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
-                cellLys[cellnum].setOrientation(LinearLayout.VERTICAL);
-                cellLys[cellnum].setGravity(Gravity.CENTER_HORIZONTAL);
-                cellLys[cellnum].setLayoutParams(param);
+                if(i % 2 == 0) {
+                    final int cellnum = ((i / 2) * columns) + j;
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                    cellLys[cellnum].setOrientation(LinearLayout.VERTICAL);
+                    cellLys[cellnum].setGravity(Gravity.CENTER_HORIZONTAL);
+                    cellLys[cellnum].setLayoutParams(param);
 
-                coverCellLys[cellnum].setOrientation(LinearLayout.VERTICAL);
-                coverCellLys[cellnum].setLayoutParams(param);
-                coverCellLys[cellnum].setBackgroundResource(R.drawable.ripple_button);
-                coverCellLys[cellnum].setClickable(true);
-                coverCellLys[cellnum].setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        onDateClick(cellnum, false);
-                    }
-                });
-                coverCellLys[cellnum].setOnLongClickListener(new OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        onDateClick(cellnum, true);
-                        return false;
-                    }
-                });
+                    coverCellLys[cellnum].setOrientation(LinearLayout.VERTICAL);
+                    coverCellLys[cellnum].setLayoutParams(param);
+                    coverCellLys[cellnum].setBackgroundResource(R.drawable.ripple_button);
+                    coverCellLys[cellnum].setClickable(true);
+                    coverCellLys[cellnum].setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onDateClick(cellnum, false);
+                        }
+                    });
+                    coverCellLys[cellnum].setOnLongClickListener(new OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            onDateClick(cellnum, true);
+                            return false;
+                        }
+                    });
 
-                dateTexts[cellnum].setLayoutParams(dateTextLp);
-                dateTexts[cellnum].setTextSize(TypedValue.COMPLEX_UNIT_DIP, dateTextSize);
-                dateTexts[cellnum].setPadding(AppScreen.dpToPx(3), AppScreen.dpToPx(3),
-                        AppScreen.dpToPx(3), AppScreen.dpToPx(3));
-                dateTexts[cellnum].setIncludeFontPadding(false);
-                dateTexts[cellnum].setGravity(Gravity.CENTER);
-                dateTexts[cellnum].setTypeface(AppFont.mainConceptBold);
+                    ImageView student_event_indi = new ImageView(context);
+                    ImageView normal_event_indi = new ImageView(context);
+                    ImageView todo_event_indi = new ImageView(context);
+
+                    student_event_indi.setLayoutParams(indiLp);
+                    normal_event_indi.setLayoutParams(indiLp);
+                    todo_event_indi.setLayoutParams(indiLp);
+
+                    student_event_indi.setImageResource(R.drawable.ic_face_black_48dp);
+                    normal_event_indi.setImageResource(R.drawable.ic_date_range_black_48dp);
+                    todo_event_indi.setImageResource(R.drawable.ic_assignment_turned_in_black_48dp);
+
+                    student_event_indi.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    normal_event_indi.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    todo_event_indi.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+
+                    eventIndicatorLys[cellnum].addView(student_event_indi);
+                    eventIndicatorLys[cellnum].addView(normal_event_indi);
+                    eventIndicatorLys[cellnum].addView(todo_event_indi);
+
+                    eventIndicatorLys[cellnum].setOrientation(LinearLayout.HORIZONTAL);
+                    eventIndicatorLys[cellnum].setLayoutParams(indiLayoutLp);
+
+                    dateTexts[cellnum].setLayoutParams(dateTextLp);
+                    dateTexts[cellnum].setTextSize(TypedValue.COMPLEX_UNIT_DIP, dateTextSize);
+                    dateTexts[cellnum].setIncludeFontPadding(false);
+                    dateTexts[cellnum].setGravity(Gravity.CENTER);
+                    dateTexts[cellnum].setTypeface(AppFont.mainConceptBold);
+                }
             }
         }
     }
@@ -300,6 +398,13 @@ public class CalendarView extends FrameLayout {
             if(calendarInterface != null) {
                 calendarInterface.onClicked(clickedCal);
             }
+
+            if(selectedPos >= 0) {
+                cellLys[selectedPos].setBackgroundColor(Color.TRANSPARENT);
+            }
+
+            cellLys[cellnum].setBackgroundResource(R.drawable.stroke_rect_primary);
+            selectedPos = cellnum;
         }
     }
 
@@ -315,14 +420,14 @@ public class CalendarView extends FrameLayout {
             is_today = CalendarUtil.isSameDay(targetCal, todayCal);
             if (i < startPos) {
                 dateTexts[i].setText(String.valueOf(targetCal.get(Calendar.DATE)));
-                setDateText(dateTexts[i], i, targetCal, true, is_today, false);
+                setDateText(i, targetCal, true, is_today, false);
             } else if (i >= startPos && i < startPos + lastDate) {
                 dateTexts[i].setText(String.valueOf(1 + i - startPos));
-                setDateText(dateTexts[i], i, targetCal, false, is_today, false);
+                setDateText(i, targetCal, false, is_today, false);
             } else {
                 dateTexts[i].setText(String.valueOf(1 + next_month_date));
                 next_month_date++;
-                setDateText(dateTexts[i], i, targetCal, true, is_today, false);
+                setDateText(i, targetCal, true, is_today, false);
             }
             targetCal.add(Calendar.DATE, 1);
         }
@@ -331,11 +436,13 @@ public class CalendarView extends FrameLayout {
     /**
      * 오늘, 주말, 공휴일, 과거등을 고려하여 날짜 텍스트 세팅
      */
-    private void setDateText(TextView textview, int pos, Calendar cal, boolean alpha,
+    private void setDateText(int pos, Calendar cal, boolean alpha,
                              boolean is_today, boolean is_selected){
         if(is_today){
             todayPos = pos;
         }
+
+        TextView textview = dateTexts[pos];
 
         if(is_today) {
             textview.setBackgroundResource(R.drawable.fill_circle_primary);
@@ -350,8 +457,10 @@ public class CalendarView extends FrameLayout {
         }
 
         if(alpha) {
+            eventIndicatorLys[pos].setAlpha(0.3f);
             textview.setAlpha(0.3f);
         }else{
+            eventIndicatorLys[pos].setAlpha(1f);
             textview.setAlpha(1f);
         }
     }

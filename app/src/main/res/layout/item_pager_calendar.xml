@@ -22,7 +22,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.2"
         android:background="@color/white"
-        android:layout_marginLeft="20dp">
+        android:layout_marginLeft="30dp">
     </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

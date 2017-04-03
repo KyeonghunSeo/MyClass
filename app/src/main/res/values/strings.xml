@@ -14,7 +14,7 @@
     <string name="grade">학년</string>
     <string name="class_number">반</string>
     <string name="attendance">출석</string>
-    <string name="absent_sick">병가</string>
+    <string name="absent_sick">병결</string>
     <string name="absent_early">조퇴</string>
     <string name="absent">결석</string>
     <string name="announcement">발표</string>
