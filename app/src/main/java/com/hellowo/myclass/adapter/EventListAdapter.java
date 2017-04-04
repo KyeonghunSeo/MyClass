@@ -50,7 +50,7 @@ public class EventListAdapter
         final Event event = getItem(position);
         holder.binding.typeText.setText(event.getTypeTitle());
         holder.binding.typeImage.setImageResource(event.getTypeIconId());
-        holder.binding.dateText.setText(AppDateFormat.smallmdeDate.format(new Date(event.dtStart)));
+        holder.binding.dateText.setText(event.getDateText());
 
         if(!TextUtils.isEmpty(event.description)) {
             holder.binding.memoText.setVisibility(View.VISIBLE);

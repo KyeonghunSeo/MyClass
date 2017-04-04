@@ -118,7 +118,7 @@ public class CalendarView extends FrameLayout {
         drawIndicator();
     }
 
-    private void drawIndicator() {
+    public void drawIndicator() {
         for(int i = 0; i < eventIndicatorLys.length; i++) {
             eventIndicatorLys[i].getChildAt(0).setVisibility(GONE);
             eventIndicatorLys[i].getChildAt(1).setVisibility(GONE);
@@ -281,7 +281,7 @@ public class CalendarView extends FrameLayout {
         indiLayoutLp.setMargins(0, AppScreen.dpToPx(3), 0, 0);
 
         LinearLayout.LayoutParams indiLp = new LinearLayout.LayoutParams(
-                AppScreen.dpToPx(7), AppScreen.dpToPx(7));
+                AppScreen.dpToPx(10), AppScreen.dpToPx(10));
 
         for (int i = 0; i < rows * 2; i++) {
             lineLys[i / 2].setOrientation(LinearLayout.HORIZONTAL);

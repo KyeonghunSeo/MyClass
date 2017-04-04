@@ -128,13 +128,6 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void initDate() {
-        if(event.isStudentsEvent()) {
-
-            binding.dateDivideText.setVisibility(View.GONE);
-            binding.endDateText.setVisibility(View.GONE);
-
-        }
-
         setDateText();
 
         binding.startDateText.setOnClickListener(new View.OnClickListener() {
@@ -203,8 +196,14 @@ public class EventActivity extends AppCompatActivity {
 
         if(event.isTodo()) {
             binding.doneLayout.setVisibility(View.VISIBLE);
+            event.dtEnd = event.dtStart;
         }else{
             binding.doneLayout.setVisibility(View.GONE);
+        }
+
+        if(!event.isEvent()) {
+            binding.dateDivideText.setVisibility(View.GONE);
+            binding.endDateText.setVisibility(View.GONE);
         }
     }
 

@@ -26,9 +26,9 @@
     <string name="todo">할일</string>
     <string name="add_student">학생 추가하기</string>
     <string name="call">전화하기</string>
-    <string name="recentEvent">일정</string>
+    <string name="recentEvent">이번주 일정</string>
     <string name="undond_task">해야할 일</string>
-    <string name="birth_this_month">이 달의 생일</string>
+    <string name="birth_this_month">이 달의 생일자</string>
     <string name="student_phone_number">학생 전화입니다</string>
     <string name="parent_phone_number">학부모 전화입니다</string>
     <string name="get_student_from_csv_file">CSV 파일로 한번에 학생정보 가져오기</string>

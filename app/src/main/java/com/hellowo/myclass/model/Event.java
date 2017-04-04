@@ -1,9 +1,11 @@
 package com.hellowo.myclass.model;
 
 import com.hellowo.myclass.App;
+import com.hellowo.myclass.AppDateFormat;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.utils.StringUtil;
 
+import java.util.Date;
 import java.util.UUID;
 
 import io.realm.RealmList;
@@ -16,6 +18,7 @@ public class Event extends RealmObject {
     public static final String KEY_DT_END = "dtEnd";
     public static final String KEY_TYPE = "type";
     public static final String KEY_STUDENT_ID = "students.studentId";
+    public static final String KEY_DT_DONE = "dtDone";
 
     public static final int TYPE_ABSENT = 0;
     public static final int TYPE_SICK = 1;
@@ -131,5 +134,19 @@ public class Event extends RealmObject {
 
     public boolean isTodo() {
         return type == TYPE_TODO;
+    }
+
+    public boolean isEvent() {
+        return type == TYPE_EVENT;
+    }
+
+    public String getDateText() {
+        if(isEvent()) {
+            return AppDateFormat.smallmdeDate.format(new Date(dtStart))
+                    + " ~ "
+                    + AppDateFormat.smallmdeDate.format(new Date(dtEnd));
+        }else {
+            return AppDateFormat.smallmdeDate.format(new Date(dtStart));
+        }
     }
 }

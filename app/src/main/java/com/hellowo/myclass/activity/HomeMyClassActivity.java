@@ -48,6 +48,8 @@ import java.util.Date;
 import java.util.List;
 
 import devlight.io.library.ntb.NavigationTabBar;
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -213,14 +215,25 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 CalendarUtil.setCalendarTime23(clickedCal);
                 long endTime = clickedCal.getTimeInMillis();
 
-                RealmResults<Event> eventRealmResults = realm.where(Event.class)
+                if(calendarEventRealmResults != null) {
+                    calendarEventRealmResults.removeAllChangeListeners();
+                }
+
+                calendarEventRealmResults = realm.where(Event.class)
                         .greaterThanOrEqualTo(Event.KEY_DT_END, startTime)
                         .lessThanOrEqualTo(Event.KEY_DT_START, endTime)
                         .findAllSorted(Event.KEY_DT_START, Sort.DESCENDING);
 
+                calendarEventRealmResults.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Event>>() {
+                    @Override
+                    public void onChange(RealmResults<Event> collection, OrderedCollectionChangeSet changeSet) {
+                        calendarView.drawIndicator();
+                    }
+                });
+
                 recyclerView.setAdapter(new EventListAdapter(
                         HomeMyClassActivity.this,
-                        eventRealmResults,
+                        calendarEventRealmResults,
                         myClass.classId)
                 );
 
@@ -250,6 +263,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
     private View createHomeView() {
         final View view = LayoutInflater.from(
                 getBaseContext()).inflate(R.layout.item_pager_home, null, false);
+
         classImage = (KenBurnsView)view.findViewById(R.id.classImage);
 
         classImage.setOnClickListener(new View.OnClickListener() {
@@ -260,6 +274,61 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, Calendar.SUNDAY);
+
+        CalendarUtil.setCalendarTime0(calendar);
+        long startTime = calendar.getTimeInMillis();
+
+        calendar.set(Calendar.DAY_OF_MONTH, Calendar.SATURDAY);
+        CalendarUtil.setCalendarTime23(calendar);
+        long endTime = calendar.getTimeInMillis();
+
+        homeEventRealmResults = realm.where(Event.class)
+                .equalTo(Event.KEY_TYPE, Event.TYPE_EVENT)
+                .greaterThanOrEqualTo(Event.KEY_DT_END, startTime)
+                .lessThanOrEqualTo(Event.KEY_DT_START, endTime)
+                .findAllSorted(Event.KEY_DT_START, Sort.ASCENDING);
+
+        final RecyclerView thisWeekEventListView =
+                (RecyclerView) view.findViewById(R.id.thisWeekEventListView);
+
+        thisWeekEventListView.setLayoutManager(
+                new LinearLayoutManager(
+                        getBaseContext(),
+                        LinearLayoutManager.VERTICAL,
+                        false)
+        );
+
+        thisWeekEventListView.setAdapter(new EventListAdapter(
+                HomeMyClassActivity.this,
+                homeEventRealmResults,
+                myClass.classId)
+        );
+
+
+        homeTodoRealmResults = realm.where(Event.class)
+                .equalTo(Event.KEY_TYPE, Event.TYPE_TODO)
+                .equalTo(Event.KEY_DT_DONE, 0)
+                .findAllSorted(Event.KEY_DT_START, Sort.DESCENDING);
+
+        final RecyclerView undoneTodoListView =
+                (RecyclerView) view.findViewById(R.id.undoneTodoListView);
+
+        undoneTodoListView.setLayoutManager(
+                new LinearLayoutManager(
+                        getBaseContext(),
+                        LinearLayoutManager.VERTICAL,
+                        false)
+        );
+
+        undoneTodoListView.setAdapter(new EventListAdapter(
+                HomeMyClassActivity.this,
+                homeTodoRealmResults,
+                myClass.classId)
+        );
 
         setClassImage();
 
@@ -453,6 +522,9 @@ public class HomeMyClassActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(calendarEventRealmResults != null){
+            calendarEventRealmResults.removeAllChangeListeners();
+        }
         myClass.removeAllChangeListeners();
         realm.close();
     }
