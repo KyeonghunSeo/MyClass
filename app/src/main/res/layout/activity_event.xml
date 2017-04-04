@@ -32,7 +32,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="20dp"
             android:orientation="vertical"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="50dp">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -46,7 +46,26 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primary_text"
                     android:background="@drawable/ripple_button"
-                    android:id="@+id/dateText" />
+                    android:id="@+id/startDateText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="~"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/primary_text"
+                    android:background="@drawable/ripple_button"
+                    android:id="@+id/dateDivideText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/primary_text"
+                    android:background="@drawable/ripple_button"
+                    android:id="@+id/endDateText" />
 
             </LinearLayout>
 
@@ -61,8 +80,8 @@
 
                 <ImageView
                     android:id="@+id/typeImage"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:tint="@color/primary"
                     android:scaleType="centerInside"/>
 
@@ -70,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/primary_text"
                     android:id="@+id/typeText" />
 
@@ -103,7 +122,8 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="20dp"
                 android:inputType="textMultiLine"
                 android:ems="10"
@@ -112,14 +132,60 @@
                 android:hint="@string/enter_description"
                 android:gravity="top" />
 
+            <LinearLayout
+                android:id="@+id/doneLayout"
+                android:background="@drawable/ripple_button"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="right"
+                android:gravity="center_vertical">
+
+                <CheckBox
+                    android:id="@+id/doneCheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/primary_text"
+                    android:text="@string/done"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/save"
+                style="@style/Widget.AppCompat.Button.Colored" />
+
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
             android:layout_gravity="bottom"
+            android:gravity="right"
             android:elevation="10dp">
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/timeButton"
+                android:background="@drawable/ripple_circle_button"
+                android:scaleType="centerInside"
+                android:padding="10dp"
+                android:layout_gravity="right"
+                app:srcCompat="@drawable/ic_query_builder_black_48dp" />
 
             <ImageButton
                 android:layout_width="50dp"
@@ -131,18 +197,7 @@
                 android:layout_gravity="right"
                 app:srcCompat="@drawable/ic_delete_forever_black_48dp" />
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/timeButton"
-                android:background="@drawable/ripple_circle_button"
-                android:scaleType="centerInside"
-                android:padding="10dp"
-                android:layout_marginRight="50dp"
-                android:layout_gravity="right"
-                app:srcCompat="@drawable/ic_query_builder_black_48dp" />
-
-        </FrameLayout>
+        </LinearLayout>
 
     </FrameLayout>
 </layout>

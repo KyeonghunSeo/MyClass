@@ -37,4 +37,11 @@
     <string name="student_list">학생 명단</string>
     <string name="analytics">통계</string>
     <string name="settings">환경설정</string>
+    <string name="comment">선생님 말씀</string>
+    <string name="changed_data">데이터 변경</string>
+    <string name="changed_data_sub">변경사항이 있습니다. 저장하시겠습니까?</string>
+    <string name="ask_delete">삭제</string>
+    <string name="ask_delete_sub">정말 삭제 하시겠습니까?</string>
+    <string name="done">완료</string>
+    <string name="save">저장하기</string>
 </resources>

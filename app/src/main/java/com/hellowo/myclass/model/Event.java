@@ -2,6 +2,7 @@ package com.hellowo.myclass.model;
 
 import com.hellowo.myclass.App;
 import com.hellowo.myclass.R;
+import com.hellowo.myclass.utils.StringUtil;
 
 import java.util.UUID;
 
@@ -23,9 +24,9 @@ public class Event extends RealmObject {
     public static final int TYPE_CONSULTING = 4;
     public static final int TYPE_THUMBS_UP = 5;
     public static final int TYPE_THUMBS_DOWN = 6;
-    public static final int TYPE_EVENT = 7;
-    public static final int TYPE_TODO = 8;
-    public static final int TYPE_LONG_TERM_EVENT = 9;
+    public static final int TYPE_COMMENT = 7;
+    public static final int TYPE_EVENT = 8;
+    public static final int TYPE_TODO = 9;
 
     @PrimaryKey
     public String eventId;
@@ -39,15 +40,15 @@ public class Event extends RealmObject {
     public long dtDone;
     public long lastUpdated;
 
-    public static Event creatNewEvent() {
+    public static Event creatNewEvent(int type, long time) {
         Event event = new Event();
         event.students = new RealmList<>();
-        event.type = TYPE_EVENT;
-        event.dtStart = System.currentTimeMillis();
-        event.dtEnd = System.currentTimeMillis();
+        event.type = type;
+        event.dtStart = time;
+        event.dtEnd = time;
         event.dtDone = 0;
-        event.lastUpdated = System.currentTimeMillis();
-        event.eventId = UUID.randomUUID().toString();
+        event.description = "";
+        event.lastUpdated = time;
         return event;
     }
 
@@ -67,10 +68,12 @@ public class Event extends RealmObject {
                 return App.baseContext.getString(R.string.thumbs_up);
             case TYPE_THUMBS_DOWN:
                 return App.baseContext.getString(R.string.thumbs_down);
+            case TYPE_COMMENT:
+                return App.baseContext.getString(R.string.comment);
             case TYPE_EVENT:
                 return App.baseContext.getString(R.string.event);
             case TYPE_TODO:
-                return App.baseContext.getString(R.string.event);
+                return App.baseContext.getString(R.string.todo);
             default:
                 return App.baseContext.getString(R.string.app_name);
         }
@@ -92,10 +95,41 @@ public class Event extends RealmObject {
                 return R.drawable.ic_thumb_up_black_48dp;
             case TYPE_THUMBS_DOWN:
                 return R.drawable.ic_thumb_down_black_48dp;
+            case TYPE_COMMENT:
+                return R.drawable.ic_format_quote_black_48dp;
             case TYPE_EVENT:
                 return R.drawable.ic_date_range_black_48dp;
+            case TYPE_TODO:
+                return R.drawable.ic_assignment_turned_in_black_48dp;
             default:
-                return R.drawable.ic_date_range_black_48dp;
+                return R.drawable.ic_assignment_late_black_48dp;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventId='" + eventId + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", students=" + StringUtil.ListToString(students) +
+                ", type=" + type +
+                ", dtStart=" + dtStart +
+                ", dtEnd=" + dtEnd +
+                ", dtDone=" + dtDone +
+                ", lastUpdated=" + lastUpdated +
+                '}';
+    }
+
+    public boolean isStudentsEvent() {
+        return type < TYPE_EVENT;
+    }
+
+    public boolean isTeachersEvent() {
+        return type >= TYPE_EVENT;
+    }
+
+    public boolean isTodo() {
+        return type == TYPE_TODO;
     }
 }

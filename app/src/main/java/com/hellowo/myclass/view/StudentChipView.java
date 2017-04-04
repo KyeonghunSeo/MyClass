@@ -68,7 +68,7 @@ public class StudentChipView extends FrameLayout {
 
         if(studentList.size() > 0) {
 
-            maxChipWidth = studentList.size() * chipSize + (studentList.size() - 1) * chipSize;
+            maxChipWidth = studentList.size() * chipSize + (studentList.size() - 1) * chipMargin;
 
             int position = 0;
 
@@ -102,7 +102,7 @@ public class StudentChipView extends FrameLayout {
 
         }
 
-        if(maxChipWidth > getWidth()) {
+        if(maxChipWidth > maxWidth) {
             imageView.setTranslationX((maxWidth - chipSize) / studentList.size() * position);
         }else {
             imageView.setTranslationX(chipSize * position + chipMargin * position);

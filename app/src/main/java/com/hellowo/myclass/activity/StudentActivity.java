@@ -34,6 +34,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_EVENT_TYPE;
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
 import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
@@ -193,6 +194,7 @@ public class StudentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(StudentActivity.this, EventActivity.class);
+                intent.putExtra(INTENT_KEY_EVENT_TYPE, Event.TYPE_COMMENT);
                 intent.putExtra(INTENT_KEY_STUDENT_ID, student.studentId);
                 intent.putExtra(INTENT_KEY_MY_CLASS_ID, student.myClass.classId);
                 startActivity(intent);
@@ -201,6 +203,7 @@ public class StudentActivity extends AppCompatActivity {
     }
 
     private void initEventRecyclerView() {
+
         binding.recyclerView.setLayoutManager(
                 new LinearLayoutManager(
                         getBaseContext(),
@@ -209,11 +212,12 @@ public class StudentActivity extends AppCompatActivity {
                 )
         );
 
-        binding.recyclerView.setAdapter(new EventListAdapter(
+        EventListAdapter eventListAdapter = new EventListAdapter(
                 StudentActivity.this,
                 eventRealmResults,
-                student.myClass.classId)
-        );
+                student.myClass.classId);
+
+        binding.recyclerView.setAdapter(eventListAdapter);
     }
 
     private void initEventCountText() {

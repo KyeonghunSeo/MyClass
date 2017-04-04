@@ -5,34 +5,28 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.hellowo.myclass.AppConst;
 import com.hellowo.myclass.AppDateFormat;
 import com.hellowo.myclass.AppScreen;
 import com.hellowo.myclass.R;
 import com.hellowo.myclass.activity.EventActivity;
-import com.hellowo.myclass.activity.StudentActivity;
 import com.hellowo.myclass.databinding.ItemEventListBinding;
-import com.hellowo.myclass.databinding.ItemStudentListBinding;
 import com.hellowo.myclass.model.Event;
-import com.hellowo.myclass.model.Student;
 
-import java.io.File;
 import java.util.Date;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
 
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
-import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
 public class EventListAdapter
         extends RealmRecyclerViewAdapter<Event, EventListAdapter.MyViewHolder> {
+
     Activity activity;
     private String classId;
 
@@ -56,7 +50,7 @@ public class EventListAdapter
         final Event event = getItem(position);
         holder.binding.typeText.setText(event.getTypeTitle());
         holder.binding.typeImage.setImageResource(event.getTypeIconId());
-        holder.binding.dateText.setText(AppDateFormat.mdeDate.format(new Date(event.dtStart)));
+        holder.binding.dateText.setText(AppDateFormat.smallmdeDate.format(new Date(event.dtStart)));
 
         if(!TextUtils.isEmpty(event.description)) {
             holder.binding.memoText.setVisibility(View.VISIBLE);
@@ -70,7 +64,7 @@ public class EventListAdapter
 
     @Override
     public long getItemId(int index) {
-        return getItem(index).lastUpdated;
+        return getItem(index).hashCode();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

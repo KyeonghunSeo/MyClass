@@ -19,6 +19,7 @@ import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.Student;
 
 import java.io.File;
+import java.util.UUID;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
@@ -111,9 +112,9 @@ public class StudentListAdapter
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    Event event = Event.creatNewEvent();
-                    event.type = type;
+                    Event event = Event.creatNewEvent(type, System.currentTimeMillis());
                     event.students.add(student);
+                    event.eventId = UUID.randomUUID().toString();
                     realm.copyToRealmOrUpdate(event);
                     Toast.makeText(activity,
                             student.name + " " + event.getTypeTitle(), Toast.LENGTH_SHORT).show();

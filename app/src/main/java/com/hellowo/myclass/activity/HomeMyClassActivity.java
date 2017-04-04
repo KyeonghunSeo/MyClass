@@ -54,6 +54,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static com.hellowo.myclass.AppConst.INTENT_KEY_EVENT_TYPE;
 import static com.hellowo.myclass.AppConst.INTENT_KEY_MY_CLASS_ID;
 import static com.hellowo.myclass.AppConst.INTENT_KEY_STUDENT_ID;
 
@@ -64,8 +65,8 @@ public class HomeMyClassActivity extends AppCompatActivity {
     private MyClass myClass;
     private RealmResults<Student> studentRealmResults;
     private RealmResults<Event> calendarEventRealmResults;
-    private RealmResults<Event> HomeEventRealmResults;
-    private RealmResults<Event> HomeTodoRealmResults;
+    private RealmResults<Event> homeEventRealmResults;
+    private RealmResults<Event> homeTodoRealmResults;
     private Calendar calendar = Calendar.getInstance();
     private KenBurnsView classImage;
 
@@ -87,10 +88,12 @@ public class HomeMyClassActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(binding.homeNavigationTabBar.getModelIndex() == 0) {
                     Intent intent = new Intent(HomeMyClassActivity.this, EventActivity.class);
+                    intent.putExtra(INTENT_KEY_EVENT_TYPE, Event.TYPE_COMMENT);
                     intent.putExtra(INTENT_KEY_MY_CLASS_ID, myClass.classId);
                     startActivity(intent);
                 }else {
                     Intent intent = new Intent(HomeMyClassActivity.this, EventActivity.class);
+                    intent.putExtra(INTENT_KEY_EVENT_TYPE, Event.TYPE_EVENT);
                     intent.putExtra(INTENT_KEY_MY_CLASS_ID, myClass.classId);
                     startActivity(intent);
                 }
@@ -392,7 +395,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 binding.topTitleText.setText(myClass.getClassTitle());
                 binding.nextMonthButton.setVisibility(View.GONE);
                 binding.prevMonthButton.setVisibility(View.GONE);
-                binding.fab.hide();
+                binding.fab.show();
                 break;
             case 3:
                 binding.topTitleText.setText(R.string.analytics);

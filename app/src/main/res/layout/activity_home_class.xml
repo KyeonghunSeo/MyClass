@@ -69,8 +69,7 @@
             android:id="@+id/homeViewPager"
             android:layout_marginTop="70dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            android:layout_height="match_parent"/>
 
         <devlight.io.library.ntb.NavigationTabBar
             android:id="@+id/homeNavigationTabBar"
