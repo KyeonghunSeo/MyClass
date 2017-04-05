@@ -1,85 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app2="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/itemButton"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
             android:background="@drawable/ripple_button"
             android:clickable="true">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2017. 10. 19"
+                android:textColor="@color/disable_text"
+                android:id="@+id/dateText"
+                style="@style/Base.TextAppearance.AppCompat.Caption" />
+
             <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp">
+                android:gravity="center_vertical">
 
-                <LinearLayout
-                    android:orientation="horizontal"
+                <CheckBox
+                    android:id="@+id/doneCheck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:gravity="center_vertical">
+                    app2:buttonTint="@color/primary_dark" />
 
-                    <ImageView
-                        android:id="@+id/typeImage"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:tint="@color/primary"
-                        android:scaleType="centerInside"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="Title"
-                        android:textColor="@color/primary_text"
-                        android:id="@+id/typeText"
-                        style="@style/Base.TextAppearance.AppCompat.Medium" />
-
-                    <com.hellowo.myclass.view.StudentChipView
-                        android:id="@+id/studentChipView"
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="50dp">
-
-                    </com.hellowo.myclass.view.StudentChipView>
-
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/typeImage"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginRight="5dp"
+                    android:tint="@color/primary"
+                    android:scaleType="centerInside"/>
 
                 <TextView
-                    android:id="@+id/memoText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:maxLines="3"
-                    android:ellipsize="end"
-                    android:text="description"
-                    android:textColor="@color/secondary_text"
-                    style="@style/Base.TextAppearance.AppCompat.Small" />
+                    android:text="Title"
+                    android:textColor="@color/primary_text"
+                    android:id="@+id/typeText"
+                    style="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <com.hellowo.myclass.view.StudentChipView
+                    android:id="@+id/studentChipView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp">
+                </com.hellowo.myclass.view.StudentChipView>
+
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/memoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:text="description"
+                android:textColor="@color/secondary_text"
+                style="@style/Base.TextAppearance.AppCompat.Small" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2017. 10. 19"
-            android:textColor="@color/disable_text"
-            android:layout_margin="16dp"
-            android:layout_gravity="right"
-            android:id="@+id/dateText"
-            style="@style/Base.TextAppearance.AppCompat.Caption" />
 
         <View
             android:layout_width="match_parent"

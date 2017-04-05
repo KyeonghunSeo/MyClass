@@ -201,7 +201,10 @@ public class EventActivity extends AppCompatActivity {
             binding.doneLayout.setVisibility(View.GONE);
         }
 
-        if(!event.isEvent()) {
+        if(event.isEvent()) {
+            binding.dateDivideText.setVisibility(View.VISIBLE);
+            binding.endDateText.setVisibility(View.VISIBLE);
+        }else{
             binding.dateDivideText.setVisibility(View.GONE);
             binding.endDateText.setVisibility(View.GONE);
         }
@@ -297,14 +300,7 @@ public class EventActivity extends AppCompatActivity {
     }
 
     private void initDone() {
-        if(event.dtDone > 0) {
-
-            binding.editText.setPaintFlags(
-                    binding.editText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            binding.editText.setTextColor(AppColor.disableText);
-            binding.doneCheck.setChecked(event.dtDone > 0);
-
-        }
+        binding.doneCheck.setChecked(event.dtDone > 0);
 
         binding.doneCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -326,7 +322,7 @@ public class EventActivity extends AppCompatActivity {
             binding.editText.setTextColor(AppColor.disableText);
         }else {
             binding.editText.setPaintFlags(
-                    binding.editText.getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
+                    binding.editText.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
             binding.editText.setTextColor(AppColor.primaryText);
         }
     }

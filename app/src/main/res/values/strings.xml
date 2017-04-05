@@ -44,4 +44,7 @@
     <string name="ask_delete_sub">정말 삭제 하시겠습니까?</string>
     <string name="done">완료</string>
     <string name="save">저장하기</string>
+    <string name="untitled">내용 없음</string>
+    <string name="none">없음</string>
+    <string name="undone">완료해제</string>
 </resources>

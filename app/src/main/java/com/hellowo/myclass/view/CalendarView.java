@@ -142,15 +142,15 @@ public class CalendarView extends FrameLayout {
             int endCellNum = (int)((eventEndTime - startTime) / AppConst.DAY_MILL_SEC);
 
             for(int i = startCellNum; i <= endCellNum; i++) {
-
-                if(event.type == Event.TYPE_EVENT) {
-                    eventIndicatorLys[i].getChildAt(1).setVisibility(VISIBLE);
-                }else if(event.type == Event.TYPE_TODO) {
-                    eventIndicatorLys[i].getChildAt(2).setVisibility(VISIBLE);
-                }else {
-                    eventIndicatorLys[i].getChildAt(0).setVisibility(VISIBLE);
-                }
-
+                try{
+                    if(event.type == Event.TYPE_EVENT) {
+                        eventIndicatorLys[i].getChildAt(1).setVisibility(VISIBLE);
+                    }else if(event.type == Event.TYPE_TODO) {
+                        eventIndicatorLys[i].getChildAt(2).setVisibility(VISIBLE);
+                    }else {
+                        eventIndicatorLys[i].getChildAt(0).setVisibility(VISIBLE);
+                    }
+                }catch (Exception ignore){}
             }
         }
     }

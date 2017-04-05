@@ -1,8 +1,11 @@
 package com.hellowo.myclass.model;
 
+import android.text.TextUtils;
+
 import com.hellowo.myclass.App;
 import com.hellowo.myclass.AppDateFormat;
 import com.hellowo.myclass.R;
+import com.hellowo.myclass.utils.CalendarUtil;
 import com.hellowo.myclass.utils.StringUtil;
 
 import java.util.Date;
@@ -136,17 +139,26 @@ public class Event extends RealmObject {
         return type == TYPE_TODO;
     }
 
+    public boolean isDone() {
+        return dtDone > 0;
+    }
+
     public boolean isEvent() {
         return type == TYPE_EVENT;
     }
 
     public String getDateText() {
-        if(isEvent()) {
+        if(isEvent() && !CalendarUtil.isSameDay(dtStart, dtEnd)) {
             return AppDateFormat.smallmdeDate.format(new Date(dtStart))
                     + " ~ "
                     + AppDateFormat.smallmdeDate.format(new Date(dtEnd));
         }else {
             return AppDateFormat.smallmdeDate.format(new Date(dtStart));
         }
+    }
+
+    public String getEventTitle() {
+        return TextUtils.isEmpty(description) ?
+                App.baseContext.getString(R.string.untitled) : description;
     }
 }

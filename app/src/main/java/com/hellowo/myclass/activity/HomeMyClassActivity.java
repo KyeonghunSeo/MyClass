@@ -1,5 +1,7 @@
 package com.hellowo.myclass.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +22,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +40,7 @@ import com.hellowo.myclass.model.Event;
 import com.hellowo.myclass.model.MyClass;
 import com.hellowo.myclass.model.Student;
 import com.hellowo.myclass.utils.CalendarUtil;
+import com.hellowo.myclass.utils.StringUtil;
 import com.hellowo.myclass.utils.StudentUtil;
 import com.hellowo.myclass.view.CalendarView;
 import com.nononsenseapps.filepicker.FilePickerActivity;
@@ -71,6 +76,7 @@ public class HomeMyClassActivity extends AppCompatActivity {
     private RealmResults<Event> homeTodoRealmResults;
     private Calendar calendar = Calendar.getInstance();
     private KenBurnsView classImage;
+    private boolean isBirthLayoutOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,7 +281,6 @@ public class HomeMyClassActivity extends AppCompatActivity {
             }
         });
 
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, Calendar.SUNDAY);
 
@@ -308,7 +313,6 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 myClass.classId)
         );
 
-
         homeTodoRealmResults = realm.where(Event.class)
                 .equalTo(Event.KEY_TYPE, Event.TYPE_TODO)
                 .equalTo(Event.KEY_DT_DONE, 0)
@@ -330,9 +334,69 @@ public class HomeMyClassActivity extends AppCompatActivity {
                 myClass.classId)
         );
 
+        setBirthLayout(view);
         setClassImage();
 
         return view;
+    }
+
+    private void setBirthLayout(View view) {
+        final LinearLayout birthLayout = (LinearLayout) view.findViewById(R.id.birthLayout);
+        final ImageView birthButton = (ImageView) view.findViewById(R.id.birthButton);
+        final TextView birthText = (TextView) view.findViewById(R.id.birthText);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.DATE, 1);
+        CalendarUtil.setCalendarTime0(calendar);
+        long startTime = calendar.getTimeInMillis();
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DATE, -1);
+        CalendarUtil.setCalendarTime23(calendar);
+        long endTime = calendar.getTimeInMillis();
+
+        RealmResults<Student> birthStudentList = realm.where(Student.class)
+                .greaterThanOrEqualTo(Student.KEY_BIRTH, startTime)
+                .lessThanOrEqualTo(Student.KEY_BIRTH, endTime)
+                .findAll();
+
+        if(birthStudentList.size() > 0) {
+            birthText.setText(getString(R.string.birth_this_month)
+                    + " : " + StringUtil.ListToString(birthStudentList, ", "));
+        }else {
+            birthText.setText(getString(R.string.birth_this_month) + " " + getString(R.string.none));
+        }
+
+        final float initX = AppScreen.getDeviceWidth(this) - AppScreen.dpToPx(40);
+
+        birthLayout.setTranslationX(initX);
+        birthButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isBirthLayoutOpened) {
+                    isBirthLayoutOpened = false;
+                    final AnimatorSet animSet = new AnimatorSet();
+                    animSet.playTogether(
+                            ObjectAnimator.ofFloat(birthLayout, "translationX",
+                                    initX - (birthLayout.getWidth() - AppScreen.dpToPx(40)), initX)
+                                    .setDuration(250)
+                    );
+                    animSet.setInterpolator(new FastOutSlowInInterpolator());
+                    animSet.start();
+                }else{
+                    isBirthLayoutOpened = true;
+                    final AnimatorSet animSet = new AnimatorSet();
+                    animSet.playTogether(
+                            ObjectAnimator.ofFloat(birthLayout, "translationX",
+                                    initX, initX - (birthLayout.getWidth() - AppScreen.dpToPx(40)))
+                                    .setDuration(250)
+                    );
+                    animSet.setInterpolator(new FastOutSlowInInterpolator());
+                    animSet.start();
+                }
+            }
+        });
     }
 
     private void setClassImage() {
@@ -364,7 +428,6 @@ public class HomeMyClassActivity extends AppCompatActivity {
         BarChart barChart = (BarChart) view.findViewById(R.id.barChart);
 
         List<Entry> entries = new ArrayList<Entry>();
-
 
         return view;
     }

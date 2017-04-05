@@ -26,6 +26,22 @@ public class StringUtil {
     }
 
     /**
+     * 리스트를 디바이더로 분리하여 추출
+     * @param list 리스트
+     * @return 스트링
+     */
+    public final static String ListToString(List<?> list, String devider){
+        String result = "";
+        for (int i = 0; i < list.size(); i++) {
+            if(i > 0){
+                result += devider;
+            }
+            result += list.get(i).toString();
+        }
+        return result;
+    }
+
+    /**
      * url 에서 도메인 추출
      */
     public static String getDomainName(String url) throws URISyntaxException {

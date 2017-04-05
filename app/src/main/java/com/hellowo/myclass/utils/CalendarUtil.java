@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 public class CalendarUtil {
     private static Calendar tempCal = Calendar.getInstance();
+    private static Calendar tempCal2 = Calendar.getInstance();
 
     /**
      * 하루의 시작으로 설정
@@ -69,9 +70,6 @@ public class CalendarUtil {
         }
     }
 
-    /**
-     * 같은 날인지 체크
-     */
     public static boolean isSameDay(Calendar cal1, Calendar cal2){
         if(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
@@ -79,6 +77,12 @@ public class CalendarUtil {
         }else{
             return false;
         }
+    }
+
+    public static boolean isSameDay(long time1, long time2){
+        tempCal.setTimeInMillis(time1);
+        tempCal2.setTimeInMillis(time2);
+        return isSameDay(tempCal, tempCal2);
     }
 
     /**
